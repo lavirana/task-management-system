@@ -20,6 +20,6 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/tasks',[TaskController::class, 'index'])->name('tasks.index');
 Route::post('/create',[TaskController::class, 'create'])->name('tasks.create');
-
-
+Route::patch('/tasks',[TaskController::class, 'index'])->name('tasks.edit');
+Route::delete('/tasks',[TaskController::class, 'index'])->name('tasks.destroy');
 require __DIR__.'/auth.php';

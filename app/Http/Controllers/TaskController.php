@@ -20,7 +20,7 @@ class TaskController extends Controller
 
     }
 
-    public function delete(){
+    public function destroy(){
 
     }
 }
