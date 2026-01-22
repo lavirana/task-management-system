@@ -1,36 +1,43 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html>
+<head>
+    <title>Task Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+<body class="bg-gray-100">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Header -->
+    <nav class="bg-white shadow p-4 mb-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+            <!-- App Title -->
+            <div class="font-bold text-lg">
+                <a href="{{ route('dashboard') }}">
+                Task Management System
+                </a>
+            </div>
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+            <!-- Menu -->
+            <div class="space-x-4">
+                <a href="{{ route('tasks.index') }}"
+                   class="text-gray-700 hover:text-blue-600 font-medium">
+                    All Tasks
+                </a>
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+                <a href="{{ route('tasks.create') }}"
+                   class="text-gray-700 hover:text-blue-600 font-medium">
+                    Add Task
+                </a>
+            </div>
+
         </div>
-    </body>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="max-w-7xl mx-auto">
+        @yield('content')
+    </div>
+
+</body>
 </html>

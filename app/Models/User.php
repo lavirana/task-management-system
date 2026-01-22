@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Task;
 
 class User extends Authenticatable
 {
@@ -46,8 +47,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function tasks(){
-        return $this->hasMany(Tasks::class);
+    public function tasks() {
+        return $this->hasMany(Task::class, 'created_by_admin_id'); 
     }
 
 
