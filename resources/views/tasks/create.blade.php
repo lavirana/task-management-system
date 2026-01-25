@@ -4,6 +4,23 @@
 <div class="max-w-xl mx-auto p-6 bg-white shadow rounded">
 
     <h2 class="text-xl font-bold mb-4">Create Task</h2>
+    @if ($errors->any())
+    <div class="relative mb-4 rounded-lg border border-red-300 bg-red-50 p-4 text-red-700">
+        <button class="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                onclick="this.parentElement.remove()">
+            ✕
+        </button>
+
+        <ul class="list-disc list-inside space-y-1">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+
+
 
     <form method="POST" action="{{ route('tasks.store') }}">
         @csrf

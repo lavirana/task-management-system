@@ -19,7 +19,12 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/tasks',[TaskController::class, 'index'])->name('tasks.index');
-Route::post('/create',[TaskController::class, 'create'])->name('tasks.create');
-Route::patch('/tasks',[TaskController::class, 'index'])->name('tasks.edit');
-Route::delete('/tasks',[TaskController::class, 'index'])->name('tasks.destroy');
+Route::get('/create',[TaskController::class, 'create'])->name('tasks.create');
+Route::post('/store',[TaskController::class, 'store'])->name('tasks.store');
+Route::get('/edit/{id}',[TaskController::class, 'edit'])->name('tasks.edit');
+Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])
+    ->name('tasks.destroy');
+
+Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
+
 require __DIR__.'/auth.php';

@@ -12,15 +12,66 @@ class TaskController extends Controller
         return view('tasks.index', compact('tasks'));
     }
 
-    public function create(Request $request){
-           
+    public function create(){
+           return view('tasks.create');
     }
 
-    public function update(){
+    public function store(Request $request){
+
+        $validate = $request->validate([
+            'title' => 'required|max:20',
+            'description' => 'required',
+            'priority' => 'required',
+            'due_date' => 'required'
+        ]);
+
+        // create task
+        Task::create([
+            'title' => $validate['title'],
+            'description' => $validate['description'],
+            'priority' => $validate['priority'],
+            'due_date' => $validate['due_date'],
+            'status' => 'pending',
+            'created_by_admin_id' => auth()->id(),
+        ]);
+
+        return redirect()->route('tasks.index')->with('success', 'Task Created successfully!');
 
     }
 
-    public function destroy(){
-
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'title' => 'required|max:20',
+            'description' => 'required',
+            'status' => 'required',
+        ]);
+    
+        $task = Task::findOrFail($id);
+    
+        $task->update($validated);
+    
+        return redirect()->route('tasks.index')
+            ->with('success', 'Task updated successfully!');
     }
+    
+    
+
+    public function edit($id){
+        $task = Task::findOrFail($id);
+        return view('tasks.edit',compact('task'));
+    }
+
+    public function destroy($id)
+    {
+        $task = Task::findOrFail($id);
+    
+        $task->delete();
+    
+        return redirect()->route('tasks.index')
+            ->with('success', 'Task deleted successfully!');
+    }
+    
+
+  
 }
