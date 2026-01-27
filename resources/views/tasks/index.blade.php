@@ -12,20 +12,32 @@
     </div>
 
     <!-- Filters -->
-    <form method="GET" class="flex gap-4 mb-6">
-        <select name="status" class="border rounded p-2">
-            <option value="">All Status</option>
-            <option value="pending">Pending</option>
-            <option value="in_progress">In Progress</option>
-            <option value="done">Done</option>
-        </select>
+    <form method="GET" action="{{ route('tasks.index') }}" class="flex gap-4 mb-6">
+    <select name="status" class="border rounded p-2">
+        <option value="">All Status</option>
+        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>
+            Pending
+        </option>
+        <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>
+            In Progress
+        </option>
+        <option value="done" {{ request('status') == 'done' ? 'selected' : '' }}>
+            Done
+        </option>
+    </select>
 
-        <select name="priority" class="border rounded p-2">
-            <option value="">All Priority</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-        </select>
+    <select name="priority" class="border rounded p-2">
+        <option value="">All Priority</option>
+        <option value="low" {{ request('priority') == 'low' ? 'selected' : '' }}>
+            Low
+        </option>
+        <option value="medium" {{ request('priority') == 'medium' ? 'selected' : '' }}>
+            Medium
+        </option>
+        <option value="high" {{ request('priority') == 'high' ? 'selected' : '' }}>
+            High
+        </option>
+    </select>
 
         <button class="bg-gray-800 text-white px-4 rounded">
             Filter
@@ -48,11 +60,22 @@
             @foreach($tasks as $task)
             <tr class="border-t">
                 <td class="p-3">{{ $task->title }}</td>
-                <td>{{ ucfirst($task->status) }}</td>
+     
+                @php
+                    if ($task->status === 'pending') {
+                        $task_status = 'Pending';
+                    } elseif ($task->status === 'in_progress') {
+                        $task_status = 'In Progress';
+                    } else {
+                        $task_status = 'Completed';
+                    }
+             @endphp
+
+                <td>{{ ucfirst($task_status) }}</td>
                 <td>{{ ucfirst($task->priority) }}</td>
                 <td>{{ $task->due_date }}</td>
                 <td class="flex gap-2 p-2">
-
+              
                     @can('update', $task)
                     <a href="{{ route('tasks.edit', $task->id) }}"
                        class="text-blue-600">Edit</a>

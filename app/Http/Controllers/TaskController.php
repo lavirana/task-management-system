@@ -7,8 +7,20 @@ use App\Models\Task;
 
 class TaskController extends Controller
 {
-    public function index(){
-        $tasks = Task::with('user')->get();
+    public function index(Request $request){
+
+        $query = Task::query();
+
+        if($request->filled('status')){
+            $query->where('status',$request->status);
+        }
+
+        if($request->filled('priority')){
+            $query->where('priority', $request->priority);
+        }
+
+        $tasks = $query->latest()->paginate(10);
+        //$tasks = Task::with('user')->get();
         return view('tasks.index', compact('tasks'));
     }
 
