@@ -8,19 +8,16 @@ use App\Models\Task;
 class TaskController extends Controller
 {
     public function index(Request $request){
-
-        $query = Task::query();
+       
+        $query = Task::with('assignedUser'); 
 
         if($request->filled('status')){
             $query->where('status',$request->status);
         }
-
         if($request->filled('priority')){
             $query->where('priority', $request->priority);
         }
-
         $tasks = $query->latest()->paginate(10);
-        //$tasks = Task::with('user')->get();
         return view('tasks.index', compact('tasks'));
     }
 
@@ -84,6 +81,11 @@ class TaskController extends Controller
             ->with('success', 'Task deleted successfully!');
     }
     
+    public function show($id){
+        $task = Task::findOrFail($id);
+        return view('tasks.show', compact('task'));
+    }
+
 
   
 }

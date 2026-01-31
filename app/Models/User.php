@@ -47,9 +47,10 @@ class User extends Authenticatable
         ];
     }
 
-    public function tasks() {
+    public function ad_tasks() {
         return $this->hasMany(Task::class, 'created_by_admin_id'); 
     }
-
-
+    public function tasks() {
+        return $this->hasMany(Task::class, 'assigned_to_user_id'); 
+    }
 }

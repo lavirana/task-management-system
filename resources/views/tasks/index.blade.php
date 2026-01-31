@@ -51,13 +51,16 @@
                 <th class="p-3 text-left">Title</th>
                 <th>Status</th>
                 <th>Priority</th>
+                <th>Assigned Date</th>
                 <th>Due Date</th>
+                <th>Assigned User</th>
                 <th>Action</th>
             </tr>
         </thead>
 
         <tbody>
             @foreach($tasks as $task)
+         
             <tr class="border-t">
                 <td class="p-3">{{ $task->title }}</td>
      
@@ -73,7 +76,9 @@
 
                 <td>{{ ucfirst($task_status) }}</td>
                 <td>{{ ucfirst($task->priority) }}</td>
+                <td>{{ $task->assigned_date }}</td>
                 <td>{{ $task->due_date }}</td>
+                <td>{{ $task->assignedUser->name ?? 'Not Assigned' }}</td>
                 <td class="flex gap-2 p-2">
               
                     @can('update', $task)

@@ -16,8 +16,10 @@ class Task extends Model
         'description',
         'status',
         'priority',
+        'assigned_date',
         'due_date',
         'created_by_admin_id',
+        'assigned_to_user_id',
         'created_at',
         'updated_at'
     ];
@@ -25,4 +27,10 @@ class Task extends Model
     public function user() {
         return $this->belongsTo(User::class, 'created_by_admin_id');
     }
+
+    public function assignedUser()
+{
+    return $this->belongsTo(User::class, 'assigned_to_user_id');
+}
+
 }
