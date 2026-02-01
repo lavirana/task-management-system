@@ -26,6 +26,7 @@ Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])
     ->name('tasks.destroy');
 
 Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
+Route::get('/task_count/{status?}', [TaskController::class, 'taskCount'])->name('tasks.count');
 
 
 require __DIR__.'/auth.php';

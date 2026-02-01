@@ -86,6 +86,17 @@ class TaskController extends Controller
         return view('tasks.show', compact('task'));
     }
 
+    public function taskCount(Request $request, $status = null)
+    {
+        $query = Task::query();
+        if (!empty($status)) {
+            $query->where('status', $status);
+        }
+        $taskCount = $query->count();
+        return response()->json(['count' => $taskCount]);
+    }
+    
+
 
   
 }

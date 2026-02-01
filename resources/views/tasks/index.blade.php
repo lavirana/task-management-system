@@ -60,7 +60,7 @@
 
         <tbody>
             @foreach($tasks as $task)
-         
+   
             <tr class="border-t">
                 <td class="p-3">{{ $task->title }}</td>
      
@@ -78,7 +78,18 @@
                 <td>{{ ucfirst($task->priority) }}</td>
                 <td>{{ $task->assigned_date }}</td>
                 <td>{{ $task->due_date }}</td>
-                <td>{{ $task->assignedUser->name ?? 'Not Assigned' }}</td>
+                <td>
+                <select name="assign_user">
+                    <option value="">Select User</option>
+                    <option value="1" <?php if(isset($task->assignedUser) && $task->assignedUser->id == 1) echo 'selected'; ?>>
+                        Ashish Rana
+                    </option>
+                    <option value="2" <?php if(isset($task->assignedUser) && $task->assignedUser->id == 2) echo 'selected'; ?>>
+                        Rahul Rajput
+                    </option>
+                </select>
+
+                </td>
                 <td class="flex gap-2 p-2">
               
                     @can('update', $task)
