@@ -63,30 +63,26 @@
    
             <tr class="border-t">
                 <td class="p-3">{{ $task->title }}</td>
-     
-                @php
-                    if ($task->status === 'pending') {
-                        $task_status = 'Pending';
-                    } elseif ($task->status === 'in_progress') {
-                        $task_status = 'In Progress';
-                    } else {
-                        $task_status = 'Completed';
-                    }
-             @endphp
-
-                <td>{{ ucfirst($task_status) }}</td>
+                  
+        
+                <td>  
+                    <select name="task_status" data-task-id="{{ $task->id }}">
+                        <option value="in_progress" <?php if(isset($task->status) && $task->status == 'in_progress') echo 'selected'; ?>>In Progress</option>
+                        <option value="pending" <?php if(isset($task->status) && $task->status == 'pending') echo 'selected'; ?>>Pending</option>
+                        <option value="done" <?php if(isset($task->status) && $task->status == 'done') echo 'selected'; ?>>Completed</option>
+                    </select>
+                </td>
                 <td>{{ ucfirst($task->priority) }}</td>
                 <td>{{ $task->assigned_date }}</td>
                 <td>{{ $task->due_date }}</td>
                 <td>
-                <select name="assign_user">
-                    <option value="">Select User</option>
-                    <option value="1" <?php if(isset($task->assignedUser) && $task->assignedUser->id == 1) echo 'selected'; ?>>
-                        Ashish Rana
-                    </option>
-                    <option value="2" <?php if(isset($task->assignedUser) && $task->assignedUser->id == 2) echo 'selected'; ?>>
-                        Rahul Rajput
-                    </option>
+                <select name="assign_user" data-task-id="{{ $task->id }}">
+                <option value="">Select User</option>
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}" <?php if(isset($task->assignedUser) && $task->assignedUser->id == $user->id) echo 'selected'; ?>>
+                            {{ $user->name }}
+                        </option>
+                    @endforeach
                 </select>
 
                 </td>
@@ -113,3 +109,58 @@
 
 </div>
 @endsection
+
+
+<script>
+document.addEventListener('change', function (e) { 
+    // document = poora HTML page 👉 addEventListener('change', …) = jab bhi page par koi input / select change ho
+    //e = ek event object hai jo batata hai: kaunsa element, kab aur kaise change hua.
+    if (e.target.name === 'assign_user') {
+        let user_id = e.target.value;
+        let task_id = e.target.dataset.taskId;
+        if (!user_id || !task_id) return;
+        fetch('/tasks/assign_user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                user_id: user_id,
+                task_id: task_id
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+           // console.log('Assigned successfully');
+            alert('User assigned successfully');
+        })
+        .catch(err => console.error(err));
+    }
+
+    if(e.target.name === 'task_status'){
+         let status = e.target.value;
+        let task_id = e.target.dataset.taskId;
+        if (!status || !task_id) return;
+        fetch('/tasks/change_status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                status: status,
+                task_id: task_id
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            //console.log('Status updated successfully');
+            alert('Task status updated successfully');
+        })
+        .catch(err => console.error(err));
+    }
+
+});
+</script>
+

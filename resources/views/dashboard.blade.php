@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 });
 document.addEventListener('DOMContentLoaded', function (){
-    fetch('/task_count/completed')
+    fetch('/task_count/done')
         .then(response => response.json())
         .then(data => {
             document.getElementById('completedTasks').innerText = data.count;

@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Task Manager</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
