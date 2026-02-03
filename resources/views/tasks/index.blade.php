@@ -72,9 +72,20 @@
                         <option value="done" <?php if(isset($task->status) && $task->status == 'done') echo 'selected'; ?>>Completed</option>
                     </select>
                 </td>
-                <td>{{ ucfirst($task->priority) }}</td>
-                <td>{{ $task->assigned_date }}</td>
-                <td>{{ $task->due_date }}</td>
+                <td>
+                    <select name="task_priority" data-task-id="{{ $task->id }}">
+                    <option value="low" <?php if(isset($task->priority) && $task->priority == 'low') echo 'selected'; ?>>Low</option>
+                        <option value="medium" <?php if(isset($task->priority) && $task->priority == 'medium') echo 'selected'; ?>>Medium</option>
+                        <option value="high" <?php if(isset($task->priority) && $task->priority == 'high') echo 'selected'; ?>>High</option>
+                    </select>
+                
+               </td>
+                <td>
+                    <input type="date" value="{{ $task->assigned_date }}" name="assigned_date" id="assigned_date">
+                </td>
+                <td>
+                <input type="date" value="{{ $task->due_date }}" name="due_date" id="due_date">
+                </td>
                 <td>
                 <select name="assign_user" data-task-id="{{ $task->id }}">
                 <option value="">Select User</option>
@@ -164,6 +175,33 @@ document.addEventListener('change', function (e) {
         .then(data => {
                 Toastify({
                     text: "Task status updated successfully",
+                    className: "info",
+                    style: {
+                        background: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }
+                }).showToast();
+        })
+        .catch(err => console.error(err));
+    }
+    if(e.target.name === 'task_priority'){
+         let priority = e.target.value;
+        let task_id = e.target.dataset.taskId;
+        if (!priority || !task_id) return;
+        fetch('/tasks/change_priority', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                priority: priority,
+                task_id: task_id
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+                Toastify({
+                    text: "Task priority updated successfully",
                     className: "info",
                     style: {
                         background: "linear-gradient(to right, #00b09b, #96c93d)",

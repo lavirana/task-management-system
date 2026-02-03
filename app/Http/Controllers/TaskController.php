@@ -138,6 +138,29 @@ class TaskController extends Controller
             ], 500);
         }
     }
+
+    public function changePriority(Request $request)
+    {
+        try{
+            $task = Task::find($request->task_id);
+    
+            if (!$task) {
+                return response()->json([
+                    'error' => 'Task not found'
+                ], 404);
+            }
+            $task->priority = $request->priority;
+            $task->save();
+    
+            return response()->json([
+                'success' => true
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
     
 
 

@@ -29,6 +29,7 @@ Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update
 Route::get('/task_count/{status?}', [TaskController::class, 'taskCount'])->name('tasks.count');
 Route::post('/tasks/assign_user', [TaskController::class, 'assignTask'])->name('tasks.assign');
 Route::post('/tasks/change_status', [TaskController::class, 'changeStatus'])->name('tasks.change_status');
+Route::post('/tasks/change_priority', [TaskController::class, 'changePriority'])->name('tasks.change_priority');
 
 
 require __DIR__.'/auth.php';
