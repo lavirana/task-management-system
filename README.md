@@ -72,3 +72,6 @@ This project focuses on clean backend logic, CRUD operations, and AJAX-based upd
 1. Clone the repository
    ```bash
    git clone https://github.com/your-username/task-management-system.git
+
+
+![alt text](<Screenshot 2026-02-03 at 10.48.19 AM.png>)
