@@ -161,6 +161,28 @@ class TaskController extends Controller
             ], 500);
         }
     }
+
+    public function updateAssignedDate(Request $request){
+        try{
+            $task = Task::find($request->task_id);
+    
+            if (!$task) {
+                return response()->json([
+                    'error' => 'Task not found'
+                ], 404);
+            }
+            $task->assigned_date = $request->assigned_date;
+            $task->save();
+    
+            return response()->json([
+                'success' => true
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
     
 
 

@@ -81,10 +81,10 @@
                 
                </td>
                 <td>
-                    <input type="date" value="{{ $task->assigned_date }}" name="assigned_date" id="assigned_date">
+                    <input type="date" value="{{ $task->assigned_date }}" name="assigned_date" id="assigned_date" data-task-id="{{ $task->id }}">
                 </td>
                 <td>
-                <input type="date" value="{{ $task->due_date }}" name="due_date" id="due_date">
+                <input type="date" value="{{ $task->due_date }}" name="due_date" id="due_date" data-task-id="{{ $task->id }}">
                 </td>
                 <td>
                 <select name="assign_user" data-task-id="{{ $task->id }}">
@@ -155,7 +155,6 @@ document.addEventListener('change', function (e) {
         })
         .catch(err => console.error(err));
     }
-
     if(e.target.name === 'task_status'){
          let status = e.target.value;
         let task_id = e.target.dataset.taskId;
@@ -210,7 +209,40 @@ document.addEventListener('change', function (e) {
         })
         .catch(err => console.error(err));
     }
+    if(e.target.name === 'assigned_date'){
+        let assigned_date = e.target.value;
+        let task_id = e.target.dataset.taskId;
+        if (!assigned_date || !task_id) return;
 
+        fetch('/tasks/update_assigned_date', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document
+                    .querySelector('meta[name="csrf-token"]')
+                    .getAttribute('content')
+            },
+            body: JSON.stringify({
+                task_id: task_id,
+                assigned_date: assigned_date
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+           //alert('Assigned date updated successfully');
+            Toastify({
+                    text: "Assigned date updated successfully",
+                    className: "info",
+                    style: {
+                        background: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }
+                }).showToast();
+        })
+        .catch(err => console.error(err));
+    }
 });
+
+
+
 </script>
 
