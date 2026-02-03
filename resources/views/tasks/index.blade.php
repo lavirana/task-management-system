@@ -133,7 +133,14 @@ document.addEventListener('change', function (e) {
         .then(res => res.json())
         .then(data => {
            // console.log('Assigned successfully');
-            alert('User assigned successfully');
+            //alert('User assigned successfully');
+            Toastify({
+                    text: "User Assigned successfully",
+                    className: "info",
+                    style: {
+                        background: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }
+                }).showToast();
         })
         .catch(err => console.error(err));
     }
@@ -155,8 +162,13 @@ document.addEventListener('change', function (e) {
         })
         .then(res => res.json())
         .then(data => {
-            //console.log('Status updated successfully');
-            alert('Task status updated successfully');
+                Toastify({
+                    text: "Task status updated successfully",
+                    className: "info",
+                    style: {
+                        background: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }
+                }).showToast();
         })
         .catch(err => console.error(err));
     }
