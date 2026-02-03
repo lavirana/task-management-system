@@ -21,41 +21,13 @@
             <p class="text-3xl font-bold" id="completedTasks">0</p>
         </div>
     </div>
+    <hr>
+    <br>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div id="top_x_div" style="width: 600px; height: 400px;"></div>
+    </div>
+   
 
 </div>
 @endsection
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    fetch('/task_count/pending')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('pendingTasks').innerText = data.count;
-        })
-        .catch(error => {
-            console.error('Error fetching pending tasks:', error);
-        });
-});
-document.addEventListener('DOMContentLoaded', function (){
-    fetch('/task_count/done')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('completedTasks').innerText = data.count;
-        })
-        .catch(error => {
-            console.error('Error fetching completed tasks:', error);
-        });
-})
-document.addEventListener('DOMContentLoaded', function (){
-    fetch('/task_count/in_progress')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('progressTasks').innerText = data.count;
-        })
-        .catch(error => {
-            console.error('Error fetching in progress tasks:', error);
-        });
-})
-</script>
 
