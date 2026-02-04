@@ -19,11 +19,9 @@ class TaskController extends Controller
             $users = User::select('id', 'name')->get();
             return view('tasks.index', compact('tasks', 'users'));
     }
-
     public function create(){
            return view('tasks.create');
     }
-
     public function store(Request $request){
         $validate = $request->validate([
             'title' => 'required|max:20',
@@ -44,7 +42,6 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', 'Task Created successfully!');
 
     }
-
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -58,15 +55,11 @@ class TaskController extends Controller
 
         return redirect()->route('tasks.index')
             ->with('success', 'Task updated successfully!');
-    }
-    
-    
-
+    }  
     public function edit($id){
         $task = Task::findOrFail($id);
         return view('tasks.edit',compact('task'));
     }
-
     public function destroy($id)
     {
         $task = Task::findOrFail($id);
@@ -75,12 +68,10 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')
             ->with('success', 'Task deleted successfully!');
     }
-    
     public function show($id){
         $task = Task::findOrFail($id);
         return view('tasks.show', compact('task'));
     }
-
     public function taskCount(Request $request, $status = null)
     {
         $query = Task::query();
@@ -90,7 +81,17 @@ class TaskController extends Controller
         $taskCount = $query->count();
         return response()->json(['count' => $taskCount]);
     }
-    
+    public function taskCountStatusWise(Request $request)
+    {
+        $statuses = ['pending', 'in_progress', 'Done'];
+        $statusCounts = [];
+
+        foreach ($statuses as $status) {
+            $count = Task::where('status', $status)->count();
+            $statusCounts[$status] = $count;
+        }
+        return response()->json($statusCounts);
+    }
     public function assignTask(Request $request)
     {
         try {
@@ -114,7 +115,6 @@ class TaskController extends Controller
             ], 500);
         }
     }
-
     public function changeStatus(Request $request)
     {
         try{
@@ -138,7 +138,6 @@ class TaskController extends Controller
             ], 500);
         }
     }
-
     public function changePriority(Request $request)
     {
         try{
@@ -161,7 +160,6 @@ class TaskController extends Controller
             ], 500);
         }
     }
-
     public function updateAssignedDate(Request $request){
         try{
             $task = Task::find($request->task_id);
@@ -183,8 +181,4 @@ class TaskController extends Controller
             ], 500);
         }
     }
-    
-
-
-  
 }

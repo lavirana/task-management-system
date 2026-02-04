@@ -78,39 +78,55 @@ document.addEventListener('DOMContentLoaded', function (){
             console.error('Error fetching in progress tasks:', error);
         });
 })
-
-google.charts.load('current', {'packages':['bar']});
-      google.charts.setOnLoadCallback(drawStuff);
-
-      function drawStuff() {
-        var data = new google.visualization.arrayToDataTable([
-          ['Status', 'Numbers'],
-          ["Completed", 1],
-          ["Pending", 4],
-          ["In Progress", 5],
-          ["Due Dated Tasks", 4],
-          ['Other', 3]
-        ]);
-
-        var options = {
-          title: 'Chess opening moves',
-          width: 600,
-          legend: { position: 'none' },
-          chart: { title: 'All Tasks Status',
-               },
-          bars: 'horizontal', // Required for Material Bar Charts.
-          axes: {
-            x: {
-              0: { side: 'top', label: 'Total Numbers'} // Top x-axis.
-            }
-          },
-          bar: { groupWidth: "90%" }
-        };
-
-        var chart = new google.charts.Bar(document.getElementById('top_x_div'));
-        chart.draw(data, options);
-      };
 </script>
+
+<script>
+google.charts.load('current', { packages: ['bar'] });
+google.charts.setOnLoadCallback(loadChartData);
+
+function loadChartData() {
+    fetch('http://127.0.0.1:8000/tasks/get_task_counts')
+        .then(response => response.json())
+        .then(data => {
+            drawChart(data);
+        })
+        .catch(error => {
+            console.error('Error loading task counts:', error);
+        });
+}
+
+function drawChart(apiData) {
+
+    var chartData = google.visualization.arrayToDataTable([
+        ['Status', 'Numbers'],
+        ['Completed', apiData.Done],
+        ['Pending', apiData.pending],
+        ['In Progress', apiData.in_progress]
+    ]);
+
+    var options = {
+        width: 600,
+        legend: { position: 'none' },
+        chart: {
+            title: 'All Tasks Status'
+        },
+        bars: 'horizontal',
+        axes: {
+            x: {
+                0: { side: 'top', label: 'Total Numbers' }
+            }
+        },
+        bar: { groupWidth: "90%" }
+    };
+
+    var chart = new google.charts.Bar(
+        document.getElementById('top_x_div')
+    );
+
+    chart.draw(chartData, options);
+}
+</script>
+
 
 </body>
 </html>
