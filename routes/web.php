@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\CommentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,6 +33,8 @@ Route::post('/tasks/change_status', [TaskController::class, 'changeStatus'])->na
 Route::post('/tasks/change_priority', [TaskController::class, 'changePriority'])->name('tasks.change_priority');
 Route::post('/tasks/update_assigned_date', [TaskController::class, 'updateAssignedDate'])->name('tasks.update_assigned_date');
 Route::get('/tasks/get_task_counts', [TaskController::class, 'taskCountStatusWise'])->name('tasks.get_counts');
+Route::get('/tasks/view/{id}', [TaskController::class, 'view'])->name('tasks.view');
+Route::post('/tasks/{task}/comments', [CommentController::class, 'store'])->name('tasks.comments.store');
 
 
 require __DIR__.'/auth.php';

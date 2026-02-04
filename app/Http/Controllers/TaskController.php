@@ -68,8 +68,8 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')
             ->with('success', 'Task deleted successfully!');
     }
-    public function show($id){
-        $task = Task::findOrFail($id);
+    public function view($id){
+        $task = Task::with('comments.user')->findOrFail($id);
         return view('tasks.show', compact('task'));
     }
     public function taskCount(Request $request, $status = null)

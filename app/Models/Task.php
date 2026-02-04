@@ -27,10 +27,11 @@ class Task extends Model
     public function user() {
         return $this->belongsTo(User::class, 'created_by_admin_id');
     }
-
     public function assignedUser()
-{
-    return $this->belongsTo(User::class, 'assigned_to_user_id');
-}
-
+    {
+        return $this->belongsTo(User::class, 'assigned_to_user_id');
+    }
+    public function comments() {
+        return $this->hasMany(Comment::class);
+    }
 }

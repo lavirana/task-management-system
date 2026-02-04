@@ -98,7 +98,6 @@
 
                 </td>
                 <td class="flex gap-2 p-2">
-              
                     @can('update', $task)
                     <a href="{{ route('tasks.edit', $task->id) }}"
                        class="text-blue-600">Edit</a>
@@ -111,7 +110,7 @@
                         <button class="text-red-600">Delete</button>
                     </form>
                     @endcan
-
+                   <a href="{{ route('tasks.view', $task->id) }}"><button class="btn border-t-neutral-200">View Task</button></a>
                 </td>
             </tr>
             @endforeach
@@ -122,127 +121,4 @@
 @endsection
 
 
-<script>
-document.addEventListener('change', function (e) { 
-    // document = poora HTML page 👉 addEventListener('change', …) = jab bhi page par koi input / select change ho
-    //e = ek event object hai jo batata hai: kaunsa element, kab aur kaise change hua.
-    if (e.target.name === 'assign_user') {
-        let user_id = e.target.value;
-        let task_id = e.target.dataset.taskId;
-        if (!user_id || !task_id) return;
-        fetch('/tasks/assign_user', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({
-                user_id: user_id,
-                task_id: task_id
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-           // console.log('Assigned successfully');
-            //alert('User assigned successfully');
-            Toastify({
-                    text: "User Assigned successfully",
-                    className: "info",
-                    style: {
-                        background: "linear-gradient(to right, #00b09b, #96c93d)",
-                    }
-                }).showToast();
-        })
-        .catch(err => console.error(err));
-    }
-    if(e.target.name === 'task_status'){
-         let status = e.target.value;
-        let task_id = e.target.dataset.taskId;
-        if (!status || !task_id) return;
-        fetch('/tasks/change_status', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({
-                status: status,
-                task_id: task_id
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-                Toastify({
-                    text: "Task status updated successfully",
-                    className: "info",
-                    style: {
-                        background: "linear-gradient(to right, #00b09b, #96c93d)",
-                    }
-                }).showToast();
-        })
-        .catch(err => console.error(err));
-    }
-    if(e.target.name === 'task_priority'){
-         let priority = e.target.value;
-        let task_id = e.target.dataset.taskId;
-        if (!priority || !task_id) return;
-        fetch('/tasks/change_priority', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({
-                priority: priority,
-                task_id: task_id
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-                Toastify({
-                    text: "Task priority updated successfully",
-                    className: "info",
-                    style: {
-                        background: "linear-gradient(to right, #00b09b, #96c93d)",
-                    }
-                }).showToast();
-        })
-        .catch(err => console.error(err));
-    }
-    if(e.target.name === 'assigned_date'){
-        let assigned_date = e.target.value;
-        let task_id = e.target.dataset.taskId;
-        if (!assigned_date || !task_id) return;
-
-        fetch('/tasks/update_assigned_date', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document
-                    .querySelector('meta[name="csrf-token"]')
-                    .getAttribute('content')
-            },
-            body: JSON.stringify({
-                task_id: task_id,
-                assigned_date: assigned_date
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-           //alert('Assigned date updated successfully');
-            Toastify({
-                    text: "Assigned date updated successfully",
-                    className: "info",
-                    style: {
-                        background: "linear-gradient(to right, #00b09b, #96c93d)",
-                    }
-                }).showToast();
-        })
-        .catch(err => console.error(err));
-    }
-});
-
-
-
-</script>
 
