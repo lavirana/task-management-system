@@ -247,9 +247,66 @@ document.addEventListener('change', function (e) {
         .catch(err => console.error(err));
     }
 });
+</script>
+<script>
+let currentPage = 1;
+let rowsPerPage = 5;
+let rows = [];
 
+document.addEventListener("DOMContentLoaded", () => {
+    rows = Array.from(document.querySelectorAll("#tableBody tr"));
+    renderTable();
+});
 
+function renderTable() {
+    let start = (currentPage - 1) * rowsPerPage;
+    let end = start + rowsPerPage;
+
+    rows.forEach((row, index) => {
+        row.style.display = index >= start && index < end ? "" : "none";
+    });
+
+    document.getElementById("pageInfo").innerText =
+        `Page ${currentPage} of ${Math.ceil(rows.length / rowsPerPage)}`;
+}
+
+function nextPage() {
+    if (currentPage < Math.ceil(rows.length / rowsPerPage)) {
+        currentPage++;
+        renderTable();
+    }
+}
+
+function prevPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        renderTable();
+    }
+}
+
+document.getElementById("searchInput").addEventListener("keyup", function () {
+    let value = this.value.toLowerCase();
+    rows.forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(value)
+            ? ""
+            : "none";
+    });
+});
+
+function sortTable(colIndex) {
+    rows.sort((a, b) => {
+        let A = a.children[colIndex].innerText.toLowerCase();
+        let B = b.children[colIndex].innerText.toLowerCase();
+        return A.localeCompare(B);
+    });
+
+    let tbody = document.getElementById("tableBody");
+    tbody.innerHTML = "";
+    rows.forEach(row => tbody.appendChild(row));
+    renderTable();
+}
 
 </script>
+
 </body>
 </html>

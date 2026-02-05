@@ -77,3 +77,5 @@ This project focuses on clean backend logic, CRUD operations, and AJAX-based upd
 ![alt text](<Screenshot 2026-02-03 at 10.48.19 AM.png>)
 
 ![alt text](<Screenshot 2026-02-04 at 5.06.33 PM.png>)
+
+![alt text](<Screenshot 2026-02-05 at 11.47.32 AM.png>)

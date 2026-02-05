@@ -26,60 +26,40 @@
     <div class="grid grid-cols-2 gap-6">
     <div id="top_x_div" style="width: 600px; height: 480px;"></div>
 
-    <div class="overflow-x-auto">
-    <table class="min-w-full border border-gray-200 rounded-lg">
-        <thead class="bg-gray-100">
+
+
+<div id="tableWrapper" class="overflow-x-auto bg-white shadow rounded-lg dark:bg-gray-800">
+    <table class="min-w-full border border-gray-200 dark:border-gray-700">
+        
+        <!-- Table Head -->
+        <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 uppercase text-sm">
             <tr>
-                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b">
-                Pending Tasks
-                </th>
-                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b">
-                Priority
-                </th>
-                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b">
-                Assigned Date
-                </th>
-                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b">
-                Assigned User	
-                </th>
+                <th onclick="sortTable(0)" class="px-6 py-3 cursor-pointer">Task ⬍</th>
+                <th onclick="sortTable(1)" class="px-6 py-3 cursor-pointer">Assigned ⬍</th>
+                <th onclick="sortTable(2)" class="px-6 py-3 cursor-pointer">Status ⬍</th>
+                <th onclick="sortTable(3)" class="px-6 py-3 cursor-pointer">Priority ⬍</th>
+                <th class="px-6 py-3 text-center">Action</th>
             </tr>
         </thead>
 
-        <tbody class="bg-white">
-            <tr class="hover:bg-gray-50">
-                <td class="px-4 py-2 border-b">The Sliding</td>
-                <td class="px-4 py-2 border-b">High</td>
-                <td class="px-4 py-2 border-b">28-02-2026</td>
-                <td class="px-4 py-2 border-b">Ashish</td>
-            </tr>
-        </tbody>
-    </table>
-<br>
-    <table class="min-w-full border border-gray-200 rounded-lg">
-        <thead class="bg-gray-100">
+        <!-- Table Body -->
+        <tbody id="tableBody" class="divide-y divide-gray-200 dark:divide-gray-700">
+
+        @foreach($tasks as $task)
             <tr>
-                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b">
-                Recently Added Tasks
-                </th>
-                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b">
-                    Artist
-                </th>
-                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b">
-                    Year
-                </th>
+                <td class="px-6 py-4">Design Login Page</td>
+                <td class="px-6 py-4">Rahul</td>
+                <td class="px-6 py-4">Pending</td>
+                <td class="px-6 py-4">High</td>
+                <td class="px-6 py-4 text-center text-blue-600">View</td>
             </tr>
-        </thead>
+        @endforeach
 
-        <tbody class="bg-white">
-            <tr class="hover:bg-gray-50">
-                <td class="px-4 py-2 border-b">The Sliding</td>
-                <td class="px-4 py-2 border-b">Malcolm Lockyer</td>
-                <td class="px-4 py-2 border-b">1961</td>
-            </tr>
         </tbody>
     </table>
-
 </div>
+
+
 
     </div>
 
