@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LogController;
 use App\Models\Task;
 
 Route::get('/', function () {
@@ -39,6 +40,7 @@ Route::post('/tasks/update_assigned_date', [TaskController::class, 'updateAssign
 Route::get('/tasks/get_task_counts', [TaskController::class, 'taskCountStatusWise'])->name('tasks.get_counts');
 Route::get('/tasks/view/{id}', [TaskController::class, 'view'])->name('tasks.view');
 Route::post('/tasks/{task}/comments', [CommentController::class, 'store'])->name('tasks.comments.store');
+Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
 
 
 require __DIR__.'/auth.php';

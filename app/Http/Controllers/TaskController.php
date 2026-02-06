@@ -39,6 +39,7 @@ class TaskController extends Controller
             'status' => 'pending',
             'created_by_admin_id' => auth()->id(),
         ]);
+        logActivity('Task created', null, null, $validate);
         return redirect()->route('tasks.index')->with('success', 'Task Created successfully!');
 
     }

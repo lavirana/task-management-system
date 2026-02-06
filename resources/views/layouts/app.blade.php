@@ -36,6 +36,10 @@
                    class="text-gray-700 hover:text-blue-600 font-medium">
                     Add Task
                 </a>
+                <a href="{{ route('logs.index') }}"
+                   class="text-gray-700 hover:text-blue-600 font-medium">
+                    Check Activity Logs
+                </a>
                 <form method="POST" action="{{ route('logout') }}" style="float: right;">
                     @csrf
                     <button
