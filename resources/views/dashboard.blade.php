@@ -33,9 +33,11 @@
                 <th>Task</th>
                 <th>Due Date</th>
                 <th>Status</th>
+                <th>User</th>
             </tr>
         </thead>
         <tbody>
+
         @foreach($tasks as $task)
             <tr>
                 <td>{{ ucfirst($task->title) }}</td>
@@ -49,6 +51,9 @@
                         Completed
                     @endif
                 </td>
+              
+                <td>{{ $task->assignedUser->name ?? 'Not Assigned' }}</td>
+                
             </tr>
         @endforeach 
         </tbody>

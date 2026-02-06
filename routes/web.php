@@ -11,7 +11,9 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $tasks = Task::latest()->take(5)->get();
+    $query = Task::with('assignedUser'); 
+    $query->where('status', 'Pending');
+    $tasks = $query->latest()->take(5)->get();
     return view('dashboard', compact('tasks'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
