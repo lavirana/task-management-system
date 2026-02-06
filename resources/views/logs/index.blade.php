@@ -19,7 +19,13 @@
             <tr class="border-t">
                 <td class="p-3">{{ $log->user->name }}</td>
                 <td>{{ ucfirst(str_replace('_', ' ', $log->action)) }}</td>
-                <td>{{ $log->task ? $log->task->title : 'N/A' }}</td>
+                <td>
+                    {{ 
+                        optional($log->task)->title 
+                        ?? $log->old_values['title']
+                        ?? 'N/A' 
+                    }}
+                </td>
                 <td>{{ $log->created_at->format('Y-m-d H:i') }}</td>
             </tr>
             @endforeach

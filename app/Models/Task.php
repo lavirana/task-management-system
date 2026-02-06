@@ -8,9 +8,7 @@ use App\Models\User;
 
 class Task extends Model
 {
-
     use HasFactory;
-
     protected $fillable = [
         'title',
         'description',
@@ -19,9 +17,7 @@ class Task extends Model
         'assigned_date',
         'due_date',
         'created_by_admin_id',
-        'assigned_to_user_id',
-        'created_at',
-        'updated_at'
+        'assigned_to_user_id'
     ];
 
     public function user() {

@@ -22,53 +22,93 @@ class TaskController extends Controller
     public function create(){
            return view('tasks.create');
     }
-    public function store(Request $request){
-        $validate = $request->validate([
-            'title' => 'required|max:20',
-            'description' => 'required',
-            'priority' => 'required',
-            'due_date' => 'required'
-        ]);
+    public function store(Request $request)
+{
+    $validate = $request->validate([
+        'title' => 'required',
+        'description' => 'required',
+        'priority' => 'required',
+        'due_date' => 'required'
+    ]);
 
-        // create task
-        Task::create([
-            'title' => $validate['title'],
-            'description' => $validate['description'],
-            'priority' => $validate['priority'],
-            'due_date' => $validate['due_date'],
-            'status' => 'pending',
-            'created_by_admin_id' => auth()->id(),
-        ]);
-        logActivity('Task created', null, null, $validate);
-        return redirect()->route('tasks.index')->with('success', 'Task Created successfully!');
+    $task = Task::create([
+        'title' => $validate['title'],
+        'description' => $validate['description'],
+        'priority' => $validate['priority'],
+        'due_date' => $validate['due_date'],
+        'status' => 'pending',
+        'created_by_admin_id' => auth()->id(),
+    ]);
 
-    }
-    public function update(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'title' => 'required|max:20',
-            'description' => 'required',
-            'status' => 'required',
-        ]);
-    
-        $task = Task::findOrFail($id);
-        $task->update($validated);
+    logActivity(
+        'Task created',
+        $task,
+        null,
+        $validate
+    );
 
-        return redirect()->route('tasks.index')
-            ->with('success', 'Task updated successfully!');
-    }  
+    return redirect()
+        ->route('tasks.index')
+        ->with('success', 'Task Created successfully!');
+}
+
+public function update(Request $request, $id)
+{
+    $validated = $request->validate([
+        'title' => 'required',
+        'description' => 'required',
+        'status' => 'required|in:pending,in_progress,done',
+        'priority' => 'required|in:low,medium,high',
+        'assigned_date' => 'nullable|date',
+        'due_date' => 'nullable|date',
+        'assigned_to_user_id' => 'nullable|exists:users,id',
+    ]);
+    //dd($validated);
+
+    $task = Task::findOrFail($id);
+    $oldValues = $task->only([
+        'title',
+        'description',
+        'status'
+    ]);
+
+    $task->update($validated);
+
+    logActivity(
+        'Task updated',
+        $task,
+        $oldValues,
+        $validated
+    );
+
+    return redirect()
+        ->route('tasks.index')
+        ->with('success', 'Task updated successfully!');
+}
+
     public function edit($id){
-        $task = Task::findOrFail($id);
-        return view('tasks.edit',compact('task'));
+        $query = Task::with('assignedUser'); 
+        $task = $query->findOrFail($id);
+        $users = User::select('id', 'name')->get();
+        return view('tasks.edit',compact('task', 'users'));
     }
     public function destroy($id)
     {
         $task = Task::findOrFail($id);
+    
+        logActivity(
+            'Task Deleted',
+            $task,
+            $task->toArray(),
+            null
+        );
+    
         $task->delete();
-
+    
         return redirect()->route('tasks.index')
             ->with('success', 'Task deleted successfully!');
     }
+    
     public function view($id){
         $task = Task::with('comments.user')->findOrFail($id);
         return view('tasks.show', compact('task'));
