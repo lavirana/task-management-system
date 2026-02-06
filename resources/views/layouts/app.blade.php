@@ -26,7 +26,7 @@
             </div>
 
             <!-- Menu -->
-            <div class="space-x-4">
+            <div class="space-x-6">
                 <a href="{{ route('tasks.index') }}"
                    class="text-gray-700 hover:text-blue-600 font-medium">
                     All Tasks
@@ -36,6 +36,16 @@
                    class="text-gray-700 hover:text-blue-600 font-medium">
                     Add Task
                 </a>
+                <form method="POST" action="{{ route('logout') }}" style="float: right;">
+                    @csrf
+                    <button
+                        type="submit"
+                        class="text-red-600 hover:text-red-800 font-semibold"
+                    >
+                        Logout
+                    </button>
+                </form>
+
             </div>
 
         </div>

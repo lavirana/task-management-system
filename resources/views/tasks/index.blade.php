@@ -10,7 +10,6 @@
             + Create Task
         </a>
     </div>
-
     <!-- Filters -->
     <form method="GET" action="{{ route('tasks.index') }}" class="flex gap-4 mb-6">
     <select name="status" class="border rounded p-2">
@@ -25,7 +24,6 @@
             Done
         </option>
     </select>
-
     <select name="priority" class="border rounded p-2">
         <option value="">All Priority</option>
         <option value="low" {{ request('priority') == 'low' ? 'selected' : '' }}>
@@ -38,12 +36,10 @@
             High
         </option>
     </select>
-
         <button class="bg-gray-800 text-white px-4 rounded">
             Filter
         </button>
     </form>
-
     <!-- Task Table -->
     <table class="w-full bg-white shadow rounded">
         <thead class="bg-gray-200">
@@ -57,14 +53,10 @@
                 <th>Action</th>
             </tr>
         </thead>
-
         <tbody>
             @foreach($tasks as $task)
-   
             <tr class="border-t">
                 <td class="p-3">{{ $task->title }}</td>
-                  
-        
                 <td>  
                     <select name="task_status" data-task-id="{{ $task->id }}">
                         <option value="in_progress" <?php if(isset($task->status) && $task->status == 'in_progress') echo 'selected'; ?>>In Progress</option>
@@ -77,8 +69,7 @@
                     <option value="low" <?php if(isset($task->priority) && $task->priority == 'low') echo 'selected'; ?>>Low</option>
                         <option value="medium" <?php if(isset($task->priority) && $task->priority == 'medium') echo 'selected'; ?>>Medium</option>
                         <option value="high" <?php if(isset($task->priority) && $task->priority == 'high') echo 'selected'; ?>>High</option>
-                    </select>
-                
+                    </select>         
                </td>
                 <td>
                     <input type="date" value="{{ $task->assigned_date }}" name="assigned_date" id="assigned_date" data-task-id="{{ $task->id }}">
@@ -95,7 +86,6 @@
                         </option>
                     @endforeach
                 </select>
-
                 </td>
                 <td class="flex gap-2 p-2">
                     @can('update', $task)
@@ -116,7 +106,6 @@
             @endforeach
         </tbody>
     </table>
-
 </div>
 @endsection
 
