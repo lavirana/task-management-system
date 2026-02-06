@@ -96,18 +96,22 @@ public function update(Request $request, $id)
     {
         $task = Task::findOrFail($id);
     
-        logActivity(
-            'Task Deleted',
-            $task,
-            $task->toArray(),
-            null
-        );
+        // save task data BEFORE delete
+        $oldValues = $task->toArray();
     
         $task->delete();
+    
+        logActivity(
+            'Task Deleted',
+            null,          // task is gone
+            $oldValues,    // <-- THIS is important
+            null
+        );
     
         return redirect()->route('tasks.index')
             ->with('success', 'Task deleted successfully!');
     }
+    
     
     public function view($id){
         $task = Task::with('comments.user')->findOrFail($id);
