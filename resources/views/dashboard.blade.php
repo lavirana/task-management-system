@@ -26,45 +26,35 @@
     <div class="grid grid-cols-2 gap-6">
     <div id="top_x_div" style="width: 600px; height: 480px;"></div>
 
-
-
-<div id="tableWrapper" class="overflow-x-auto bg-white shadow rounded-lg dark:bg-gray-800">
-    <table class="min-w-full border border-gray-200 dark:border-gray-700">
-        
-        <!-- Table Head -->
-        <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 uppercase text-sm">
+<div id="tableWrapper" class="overflow-x-auto bg-white shadow rounded-lg dark:bg-gray-800" style="padding: 10px;">
+        <table id="example" class="table table-striped nowrap" style="width:100%;">
+        <thead >
             <tr>
-                <th onclick="sortTable(0)" class="px-6 py-3 cursor-pointer">Task ⬍</th>
-                <th onclick="sortTable(1)" class="px-6 py-3 cursor-pointer">Assigned ⬍</th>
-                <th onclick="sortTable(2)" class="px-6 py-3 cursor-pointer">Status ⬍</th>
-                <th onclick="sortTable(3)" class="px-6 py-3 cursor-pointer">Priority ⬍</th>
-                <th class="px-6 py-3 text-center">Action</th>
+                <th>Task</th>
+                <th>Due Date</th>
+                <th>Status</th>
             </tr>
         </thead>
-
-        <!-- Table Body -->
-        <tbody id="tableBody" class="divide-y divide-gray-200 dark:divide-gray-700">
-
+        <tbody>
         @foreach($tasks as $task)
             <tr>
-                <td class="px-6 py-4">Design Login Page</td>
-                <td class="px-6 py-4">Rahul</td>
-                <td class="px-6 py-4">Pending</td>
-                <td class="px-6 py-4">High</td>
-                <td class="px-6 py-4 text-center text-blue-600">View</td>
+                <td>{{ ucfirst($task->title) }}</td>
+                <td>{{ $task->due_date }}</td>
+                <td>
+                    @if($task->status == 'in_progress')
+                        In Progress
+                    @elseif($task->status == 'pending')
+                        Pending
+                    @else
+                        Completed
+                    @endif
+                </td>
             </tr>
-        @endforeach
-
+        @endforeach 
         </tbody>
     </table>
 </div>
-
-
-
     </div>
-
-   
-
 </div>
 @endsection
 

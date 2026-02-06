@@ -5,8 +5,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
- 
-    
+       <!-- DataTables CSS -->
+       <link href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" rel="stylesheet">
+     
+   
+  
 </head>
 
 <body class="bg-gray-100">
@@ -44,7 +47,11 @@
     </div>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
+      <!-- jQuery -->
+      <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+      
+      <!-- DataTables JS -->
+      <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
 
 
 <script>
@@ -248,65 +255,12 @@ document.addEventListener('change', function (e) {
     }
 });
 </script>
+
+
 <script>
-let currentPage = 1;
-let rowsPerPage = 5;
-let rows = [];
-
-document.addEventListener("DOMContentLoaded", () => {
-    rows = Array.from(document.querySelectorAll("#tableBody tr"));
-    renderTable();
-});
-
-function renderTable() {
-    let start = (currentPage - 1) * rowsPerPage;
-    let end = start + rowsPerPage;
-
-    rows.forEach((row, index) => {
-        row.style.display = index >= start && index < end ? "" : "none";
-    });
-
-    document.getElementById("pageInfo").innerText =
-        `Page ${currentPage} of ${Math.ceil(rows.length / rowsPerPage)}`;
-}
-
-function nextPage() {
-    if (currentPage < Math.ceil(rows.length / rowsPerPage)) {
-        currentPage++;
-        renderTable();
-    }
-}
-
-function prevPage() {
-    if (currentPage > 1) {
-        currentPage--;
-        renderTable();
-    }
-}
-
-document.getElementById("searchInput").addEventListener("keyup", function () {
-    let value = this.value.toLowerCase();
-    rows.forEach(row => {
-        row.style.display = row.innerText.toLowerCase().includes(value)
-            ? ""
-            : "none";
-    });
-});
-
-function sortTable(colIndex) {
-    rows.sort((a, b) => {
-        let A = a.children[colIndex].innerText.toLowerCase();
-        let B = b.children[colIndex].innerText.toLowerCase();
-        return A.localeCompare(B);
-    });
-
-    let tbody = document.getElementById("tableBody");
-    tbody.innerHTML = "";
-    rows.forEach(row => tbody.appendChild(row));
-    renderTable();
-}
-
-</script>
-
+        new DataTable('#example', {
+        responsive: true
+        });
+    </script>
 </body>
 </html>
