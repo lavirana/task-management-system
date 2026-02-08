@@ -69,6 +69,7 @@
                     No new notifications
                 </div>
                 @endforelse
+               <span>All Notifications</span> 
 
     </div>
 </div>

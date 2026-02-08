@@ -70,15 +70,26 @@ public function update(Request $request, $id)
         'due_date' => 'nullable|date',
         'assigned_to_user_id' => 'nullable|exists:users,id',
     ]);
-    //dd($validated);
 
     $task = Task::findOrFail($id);
+
+    // 🔥 OLD values for activity log
     $oldValues = $task->only([
         'title',
         'description',
-        'status'
+        'status',
+        'due_date',
     ]);
 
+    // 🔥 IMPORTANT PART (REMINDER RESET LOGIC)
+    if (
+        isset($validated['due_date']) &&
+        $task->due_date != $validated['due_date']
+    ) {
+        $task->due_reminder_sent = false;
+    }
+
+    // 🔥 Update task
     $task->update($validated);
 
     logActivity(
@@ -92,6 +103,7 @@ public function update(Request $request, $id)
         ->route('tasks.index')
         ->with('success', 'Task updated successfully!');
 }
+
 
     public function edit($id){
         $query = Task::with('assignedUser'); 

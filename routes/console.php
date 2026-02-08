@@ -18,18 +18,22 @@ Schedule::call(function () {
     logger('TASK DUE REMINDER SCHEDULER HIT');
 
     $tasks = Task::whereDate('due_date', Carbon::tomorrow())
-        ->whereNotNull('assigned_to_user_id')
-        ->get();
+    ->where('due_reminder_sent', false)
+    ->whereNotNull('assigned_to_user_id')
+    ->get();
 
-    foreach ($tasks as $task) {
-        logger('Sending reminder for task ID: '.$task->id);
+foreach ($tasks as $task) {
+    if ($task->assignedUser) {
+        $task->assignedUser->notify(
+            new TaskDueReminderNotification($task)
+        );
 
-        if ($task->assignedUser) {
-            $task->assignedUser->notify(
-                new TaskDueReminderNotification($task)
-            );
-        }
+        // 🔒 mark as sent
+        $task->update([
+            'due_reminder_sent' => true
+        ]);
     }
+}
 
 })->everyMinute();
 

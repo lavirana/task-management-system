@@ -17,7 +17,8 @@ class Task extends Model
         'assigned_date',
         'due_date',
         'created_by_admin_id',
-        'assigned_to_user_id'
+        'assigned_to_user_id',
+        'due_reminder_sent'
     ];
 
     public function user() {
