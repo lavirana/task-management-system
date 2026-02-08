@@ -40,6 +40,14 @@
         <input type="date" name="due_date"
                class="w-full border p-2 mb-3">
 
+               <label for="">Assigned User</label>
+        <select name="assigned_to_user_id" class="w-full border p-2 mb-3">
+            <option value="">Select User</option>
+            @foreach($users as $user)
+            <option value="{{ $user->id }}" >{{ $user->name }}</option>
+            @endforeach
+        </select>   
+
         <button class="bg-blue-600 text-white px-4 py-2 rounded">
             Save Task
         </button>

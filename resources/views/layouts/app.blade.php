@@ -7,26 +7,73 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
        <!-- DataTables CSS -->
        <link href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" rel="stylesheet">
-     
-   
-  
+       <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
-
 <body class="bg-gray-100">
-
     <!-- Header -->
     <nav class="bg-white shadow p-4 mb-6">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-
             <!-- App Title -->
             <div class="font-bold text-lg">
                 <a href="{{ route('dashboard') }}">
                 Task Management System
                 </a>
             </div>
-
             <!-- Menu -->
-            <div class="space-x-6">
+  <!-- Menu -->
+<div class="relative space-x-6" style="margin-left: 45%;"
+     x-data="{ open: false }">
+
+    <!-- Bell Icon -->
+    <button @click="open = !open"
+            class="relative focus:outline-none text-lg">
+        🔔
+        @if(auth()->user()->unreadNotifications->count())
+            <span
+                class="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full px-2">
+                {{ auth()->user()->unreadNotifications->count() }}
+            </span>
+        @endif
+    </button>
+    <!-- Dropdown -->
+    <div x-show="open"
+         @click.outside="open = false"
+         class="absolute right-0 mt-2 w-72 bg-white shadow rounded z-50">
+        <div class="px-3 py-2 font-semibold border-b">
+            🔔 New Notifications
+        </div>
+        @forelse(auth()->user()->unreadNotifications as $notification)
+
+                <div class="p-2 border-b hover:bg-gray-50">
+
+                    {{-- Task Assigned --}}
+                    @if($notification->type === 'App\\Notifications\\TaskAssignedNotification')
+                        🧑‍💼 <strong>Task Assigned</strong><br>
+                        {{ $notification->data['message'] ?? $notification->data['title'] }}
+
+                    {{-- Task Due Reminder --}}
+                    @elseif($notification->type === 'App\\Notifications\\TaskDueReminderNotification')
+                        ⏰ <strong>Due Reminder</strong><br>
+                        {{ $notification->data['message'] }}
+
+                    @endif
+
+                    <br>
+                    <small class="text-gray-500">
+                        {{ $notification->created_at->diffForHumans() }}
+                    </small>
+                </div>
+
+                @empty
+                <div class="p-2 text-gray-500 text-center">
+                    No new notifications
+                </div>
+                @endforelse
+
+    </div>
+</div>
+             <!-- Menu -->
+                     <div class="space-x-6"> 
                 <a href="{{ route('tasks.index') }}"
                    class="text-gray-700 hover:text-blue-600 font-medium">
                     All Tasks
@@ -45,8 +92,7 @@
                     <button
                         type="submit"
                         class="text-red-600 hover:text-red-800 font-semibold"
-                    >
-                        Logout
+                    >Logout
                     </button>
                 </form>
 

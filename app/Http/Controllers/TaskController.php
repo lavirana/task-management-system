@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\User;
+use App\Notifications\TaskAssignedNotification;
 
 class TaskController extends Controller
 {
@@ -20,7 +21,8 @@ class TaskController extends Controller
             return view('tasks.index', compact('tasks', 'users'));
     }
     public function create(){
-           return view('tasks.create');
+        $users = User::select('id', 'name')->get();
+           return view('tasks.create', compact('users'));
     }
     public function store(Request $request)
 {
@@ -28,13 +30,15 @@ class TaskController extends Controller
         'title' => 'required',
         'description' => 'required',
         'priority' => 'required',
-        'due_date' => 'required'
+        'due_date' => 'required',
+        'assigned_to_user_id' => 'nullable|exists:users,id'
     ]);
 
     $task = Task::create([
         'title' => $validate['title'],
         'description' => $validate['description'],
         'priority' => $validate['priority'],
+        'assigned_to_user_id' => $validate['assigned_to_user_id'] ?? null,
         'due_date' => $validate['due_date'],
         'status' => 'pending',
         'created_by_admin_id' => auth()->id(),
@@ -46,6 +50,9 @@ class TaskController extends Controller
         null,
         $validate
     );
+
+    $assignedUser = User::find($request->assigned_to_user_id);
+    $assignedUser->notify(new TaskAssignedNotification($task));
 
     return redirect()
         ->route('tasks.index')
