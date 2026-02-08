@@ -69,7 +69,7 @@
                     No new notifications
                 </div>
                 @endforelse
-               <span>All Notifications</span> 
+              <a href="{{ route('notifications.index', auth()->id()) }}" style="padding: 5px;font-size: 14px;font-weight: 300;">All Notifications </a>
 
     </div>
 </div>
@@ -96,12 +96,9 @@
                     >Logout
                     </button>
                 </form>
-
             </div>
-
         </div>
     </nav>
-
     <!-- Page Content -->
     <div class="max-w-7xl mx-auto">
         @yield('content')
@@ -113,8 +110,6 @@
       
       <!-- DataTables JS -->
       <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
-
-
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     fetch('/task_count/pending')
@@ -147,7 +142,6 @@ document.addEventListener('DOMContentLoaded', function (){
         });
 })
 </script>
-
 <script>
 google.charts.load('current', { packages: ['bar'] });
 google.charts.setOnLoadCallback(loadChartData);
@@ -162,7 +156,6 @@ function loadChartData() {
             console.error('Error loading task counts:', error);
         });
 }
-
 function drawChart(apiData) {
 
     var chartData = google.visualization.arrayToDataTable([
@@ -317,9 +310,11 @@ document.addEventListener('change', function (e) {
 });
 </script>
 
-
 <script>
         new DataTable('#example', {
+        responsive: true
+        });
+        new DataTable('#example2', {
         responsive: true
         });
     </script>

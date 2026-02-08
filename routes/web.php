@@ -42,5 +42,7 @@ Route::get('/tasks/view/{id}', [TaskController::class, 'view'])->name('tasks.vie
 Route::post('/tasks/{task}/comments', [CommentController::class, 'store'])->name('tasks.comments.store');
 Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
 
+Route::get('/notifications/{userId}', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+
 
 require __DIR__.'/auth.php';
