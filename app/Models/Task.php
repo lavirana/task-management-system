@@ -25,8 +25,7 @@ class Task extends Model
     public function user() {
         return $this->belongsTo(User::class, 'created_by_admin_id');
     }
-    public function assignedUser()
-    {
+    public function assignedUser() {
         return $this->belongsTo(User::class, 'assigned_to_user_id');
     }
     public function comments() {
@@ -37,5 +36,8 @@ class Task extends Model
     }
     public function project(){
         return $this->belongsTo(Project::class);
+    }
+    public function tags(){
+        return $this->belongsToMany(Tag::class);
     }
 }

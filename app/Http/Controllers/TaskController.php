@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Project;
+use App\Models\Tag;
 use App\Notifications\TaskAssignedNotification;
 
 class TaskController extends Controller
@@ -26,7 +27,9 @@ class TaskController extends Controller
     public function create(){
         $users = User::select('id', 'name')->get();
         $projects = Project::select('id', 'name')->get();
-           return view('tasks.create', compact('users', 'projects'));
+        $tags = Tag::all();
+
+           return view('tasks.create', compact('users', 'projects', 'tags'));
     }
     public function store(Request $request)
 {
@@ -51,6 +54,11 @@ class TaskController extends Controller
         'status' => 'pending',
         'created_by_admin_id' => auth()->id(),
     ]);
+
+            //Attach Tags
+            if($request->filled('tags')){
+                $task->tags()->attach($request->tags);
+            }
 
     //store file
         if($request->hasFile('attachments')){

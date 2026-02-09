@@ -24,6 +24,15 @@
                 <option value="{{ $project->id }}">{{ $project->name }}</option>
             @endforeach
         </select>
+        <label>Tags</label>
+            <select name="tags[]" multiple class="w-full border p-2 mb-3">
+                @foreach($tags as $tag)
+                    <option value="{{ $tag->id }}">
+                        {{ $tag->name }}
+                    </option>
+                @endforeach
+            </select>
+
         <input type="text" name="title" placeholder="Task Title" class="w-full border p-2 mb-3">
         <textarea name="description" placeholder="Description" class="w-full border p-2 mb-3"></textarea>
         <select name="priority" class="w-full border p-2 mb-3">
