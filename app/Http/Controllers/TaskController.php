@@ -26,6 +26,7 @@ class TaskController extends Controller
     }
     public function store(Request $request)
 {
+    //dd($request->all());
     $validate = $request->validate([
         'title' => 'required',
         'description' => 'required',
@@ -40,10 +41,24 @@ class TaskController extends Controller
         'priority' => $validate['priority'],
         'assigned_to_user_id' => $validate['assigned_to_user_id'] ?? null,
         'due_date' => $validate['due_date'],
+        'attachments.*' => 'nullable|file|max:2048',
         'status' => 'pending',
         'created_by_admin_id' => auth()->id(),
     ]);
 
+    //store file
+        if($request->hasFile('attachments')){
+            foreach($request->file('attachments') as $file){
+                $path = $file->store('attachments', 'public');
+                $task->attachments()->create([
+                    'file_name' => $file->getClientOriginalName(),
+                    'file_path' => $path,
+                    'file_type' => $file->getClientMimeType(),
+                ]);
+            }
+        }
+
+//maintain log activity
     logActivity(
         'Task created',
         $task,

@@ -61,8 +61,12 @@
             <p class="font-semibold">
                 {{ $task->description ?? 'No description provided.' }}
             </p>
-        </div>
-
+        </div> 
+        @if($task->attachments->count())
+                @foreach($task->attachments as $file)   
+                        <img src="{{ asset('storage/'.$file->file_path) }}" alt="">   
+                @endforeach       
+        @endif
     </div>
 
     <!-- Actions -->

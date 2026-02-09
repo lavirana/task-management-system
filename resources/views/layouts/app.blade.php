@@ -23,7 +23,7 @@
   <!-- Menu -->
 <div class="relative space-x-6" style="margin-left: 45%;"
      x-data="{ open: false }">
-
+     @auth
     <!-- Bell Icon -->
     <button @click="open = !open"
             class="relative focus:outline-none text-lg">
@@ -73,6 +73,7 @@
 
     </div>
 </div>
+@endauth
              <!-- Menu -->
                      <div class="space-x-6"> 
                 <a href="{{ route('tasks.index') }}"

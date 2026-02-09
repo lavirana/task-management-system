@@ -31,4 +31,7 @@ class Task extends Model
     public function comments() {
         return $this->hasMany(Comment::class);
     }
+    public function attachments() {
+        return $this->hasMany(TaskAttachment::class);
+    }
 }
