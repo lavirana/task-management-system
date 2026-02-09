@@ -18,6 +18,12 @@
 @endif
     <form method="POST" action="{{ route('tasks.store') }}" enctype="multipart/form-data">
         @csrf
+        <select name="project_id" class="w-full border p-2 mb-3">
+            <option value="">-- Select Project --</option>
+            @foreach($projects as $project)
+                <option value="{{ $project->id }}">{{ $project->name }}</option>
+            @endforeach
+        </select>
         <input type="text" name="title" placeholder="Task Title" class="w-full border p-2 mb-3">
         <textarea name="description" placeholder="Description" class="w-full border p-2 mb-3"></textarea>
         <select name="priority" class="w-full border p-2 mb-3">

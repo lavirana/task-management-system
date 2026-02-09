@@ -44,6 +44,7 @@
     <table class="w-full bg-white shadow rounded">
         <thead class="bg-gray-200">
             <tr>
+                <th>Project</th>
                 <th class="p-3 text-left">Title</th>
                 <th>Status</th>
                 <th>Priority</th>
@@ -56,7 +57,8 @@
         <tbody>
             @foreach($tasks as $task)
             <tr class="border-t">
-                <td class="p-3">{{ $task->title }}</td>
+                <td class="p-3">{{ $task->project?->name ?? 'No Project' }}</td>
+                <td>{{ $task->title }}</td>
                 <td>  
                     <select name="task_status" data-task-id="{{ $task->id }}">
                         <option value="in_progress" <?php if(isset($task->status) && $task->status == 'in_progress') echo 'selected'; ?>>In Progress</option>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\User;
+use App\Models\Project;
 use App\Notifications\TaskAssignedNotification;
 
 class TaskController extends Controller
@@ -18,17 +19,21 @@ class TaskController extends Controller
             }
             $tasks = $query->latest()->paginate(10);
             $users = User::select('id', 'name')->get();
-            return view('tasks.index', compact('tasks', 'users'));
+            $projects = Project::select('id', 'name')->get();
+
+            return view('tasks.index', compact('tasks', 'users','projects'));
     }
     public function create(){
         $users = User::select('id', 'name')->get();
-           return view('tasks.create', compact('users'));
+        $projects = Project::select('id', 'name')->get();
+           return view('tasks.create', compact('users', 'projects'));
     }
     public function store(Request $request)
 {
     //dd($request->all());
     $validate = $request->validate([
         'title' => 'required',
+        'project_id' => 'nullable|exists:projects,id',
         'description' => 'required',
         'priority' => 'required',
         'due_date' => 'required',
@@ -37,6 +42,7 @@ class TaskController extends Controller
 
     $task = Task::create([
         'title' => $validate['title'],
+        'project_id' => $validate['project_id'],
         'description' => $validate['description'],
         'priority' => $validate['priority'],
         'assigned_to_user_id' => $validate['assigned_to_user_id'] ?? null,

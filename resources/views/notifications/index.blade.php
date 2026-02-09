@@ -15,9 +15,7 @@
                 <th>Notifiable Id</th>
                 <th>Data</th>
                 <th>Tomorrow</th>
-                <th>Read At</th>
                 <th>Created At</th>
-                <th>Updated At</th>
             </tr>
         </thead>
         <tbody>
@@ -50,10 +48,7 @@
     <td>
         {{ $notification->read_at ? 'Yes' : 'No' }}
     </td>
-
-    <td>{{ $notification->read_at ?? 'Unread' }}</td>
     <td>{{ $notification->created_at->format('d M Y, h:i A') }}</td>
-    <td>{{ $notification->updated_at->format('d M Y, h:i A') }}</td>
 </tr>
 @endforeach 
         </tbody>

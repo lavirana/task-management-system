@@ -18,7 +18,8 @@ class Task extends Model
         'due_date',
         'created_by_admin_id',
         'assigned_to_user_id',
-        'due_reminder_sent'
+        'due_reminder_sent',
+        'project_id'
     ];
 
     public function user() {
@@ -33,5 +34,8 @@ class Task extends Model
     }
     public function attachments() {
         return $this->hasMany(TaskAttachment::class);
+    }
+    public function project(){
+        return $this->belongsTo(Project::class);
     }
 }

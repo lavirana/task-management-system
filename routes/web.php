@@ -22,6 +22,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/projects', [App\Http\Controllers\ProjectController::class, 'index'])->name('projects.index');
+    Route::post('/projects', [App\Http\Controllers\ProjectController::class, 'store'])->name('projects.store');
 });
 
 Route::get('/tasks',[TaskController::class, 'index'])->name('tasks.index');
@@ -43,6 +46,5 @@ Route::post('/tasks/{task}/comments', [CommentController::class, 'store'])->name
 Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
 
 Route::get('/notifications/{userId}', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
-
 
 require __DIR__.'/auth.php';
