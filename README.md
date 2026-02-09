@@ -17,6 +17,32 @@ This project focuses on clean backend logic, CRUD operations, and AJAX-based upd
 - Authentication-based task creation (Admin)
 - Clean and simple UI
 
+## 📝 Activity Logging
+
+Every important action on a task is logged for tracking and transparency.
+Example: “Ashish changed task status to Completed.”
+Helps in understanding task history and user activity.
+
+## 🔔 Email & System Notifications
+
+Implemented using Laravel Notifications.
+Users receive notifications when:
+A task is assigned to them
+A task due date is approaching
+Notifications can be sent via email and displayed inside the application (bell icon).
+
+## 📎 File Attachments
+
+Users can upload relevant files (documents, images, screenshots) directly to a task.
+Implemented using Laravel Media Library or basic file storage.
+Supports multiple attachments per task for better collaboration.
+
+## 📁 Project Grouping
+
+Introduced a Projects module to organize tasks efficiently.
+Each task can belong to a specific project (e.g., Website Redesign, Mobile App).
+Improves clarity, scalability, and project-wise task management.
+
 ---
 
 ## 🛠️ Tech Stack
