@@ -40,6 +40,8 @@
             Filter
         </button>
     </form>
+    {{ $tasks->links() }}
+    <br>
     <!-- Task Table -->
     <table class="w-full bg-white shadow rounded">
         <thead class="bg-gray-200">
@@ -47,6 +49,7 @@
                 <th>Project</th>
                 <th class="p-3 text-left">Title</th>
                 <th>Status</th>
+                <th>Tags</th>
                 <th>Priority</th>
                 <th>Assigned Date</th>
                 <th>Due Date</th>
@@ -65,6 +68,13 @@
                         <option value="pending" <?php if(isset($task->status) && $task->status == 'pending') echo 'selected'; ?>>Pending</option>
                         <option value="done" <?php if(isset($task->status) && $task->status == 'done') echo 'selected'; ?>>Completed</option>
                     </select>
+                </td>
+                <td>
+                @foreach($task->tags as $tag)
+                    <span class="badge bg-info">
+                        #{{ $tag->name }}
+                    </span>
+                @endforeach
                 </td>
                 <td>
                     <select name="task_priority" data-task-id="{{ $task->id }}">

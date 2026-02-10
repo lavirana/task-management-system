@@ -7,12 +7,14 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
        <!-- DataTables CSS -->
        <link href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" rel="stylesheet">
+       <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+
        <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 <body class="bg-gray-100">
     <!-- Header -->
     <nav class="bg-white shadow p-4 mb-6">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="max-w-8xl mx-auto flex justify-between items-center">
             <!-- App Title -->
             <div class="font-bold text-lg">
                 <a href="{{ route('dashboard') }}">
@@ -85,6 +87,7 @@
                    class="text-gray-700 hover:text-blue-600 font-medium">
                     Add Task
                 </a>
+                <a href="{{ route('tasks.calendar') }}">📅 Calendar</a>
                 <a href="{{ route('logs.index') }}"
                    class="text-gray-700 hover:text-blue-600 font-medium">
                     Check Activity Logs
@@ -111,35 +114,52 @@
       
       <!-- DataTables JS -->
       <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js"></script>
+
+
+      <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+    if (!calendarEl) return;
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: "{{ route('tasks.calendar.data') }}",
+        eventClick(info) {
+            if (info.event.url) {
+                info.jsEvent.preventDefault();
+                window.location.href = info.event.url;
+            }
+        }
+    });
+
+    calendar.render();
+});
+</script>
+@if(Route::is('dashboard'))
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     fetch('/task_count/pending')
         .then(response => response.json())
         .then(data => {
-            document.getElementById('pendingTasks').innerText = data.count;
-        })
-        .catch(error => {
-            console.error('Error fetching pending tasks:', error);
+            const el = document.getElementById('pendingTasks');
+            if (el) el.innerText = data.count;
         });
 });
 document.addEventListener('DOMContentLoaded', function (){
     fetch('/task_count/done')
         .then(response => response.json())
         .then(data => {
-            document.getElementById('completedTasks').innerText = data.count;
-        })
-        .catch(error => {
-            console.error('Error fetching completed tasks:', error);
+            const completed = document.getElementById('completedTasks');
+            if (completed) completed.innerText = data.count;
         });
 })
 document.addEventListener('DOMContentLoaded', function (){
     fetch('/task_count/in_progress')
         .then(response => response.json())
         .then(data => {
-            document.getElementById('progressTasks').innerText = data.count;
-        })
-        .catch(error => {
-            console.error('Error fetching in progress tasks:', error);
+            const progress = document.getElementById('progressTasks');
+            if (progress) progress.innerText = data.count;
         });
 })
 </script>
@@ -188,6 +208,12 @@ function drawChart(apiData) {
     chart.draw(chartData, options);
 }
 </script>
+@endif
+
+
+
+
+
 
 
 <script>
@@ -319,5 +345,6 @@ document.addEventListener('change', function (e) {
         responsive: true
         });
     </script>
+  
 </body>
 </html>

@@ -274,4 +274,22 @@ public function update(Request $request, $id)
             ], 500);
         }
     }
+
+    public function calendar(){
+        return view('tasks.calendar');
+    }
+    public function calendarData(){
+        $tasks = Task::whereNotNull('due_date')->get();
+        return response()->json(
+            $tasks->map(function ($task){
+                return [
+                    'id' => $task->id,
+                    'title' => $task->title,
+                    'start' => $task->due_date,
+                    'url' => route('tasks.edit', $task->id), // optional
+                ];
+            })
+        );
+    }
+    
 }

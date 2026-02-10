@@ -47,4 +47,7 @@ Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
 
 Route::get('/notifications/{userId}', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
 
+Route::get('/tasks/calendar', [TaskController::class, 'calendar'])->name('tasks.calendar');
+Route::get('/tasks/calendar-date', [TaskController::class, 'calendarData'])->name('tasks.calendar.data');
+
 require __DIR__.'/auth.php';

@@ -17,7 +17,7 @@
         <tbody>
             @foreach($logs as $log)
             <tr class="border-t">
-                <td class="p-3">{{ $log->user->name }}</td>
+                <td class="p-3">{{ $log->user->name ?? 'Not Found' }}</td>
                 <td>{{ ucfirst(str_replace('_', ' ', $log->action)) }}</td>
                 <td>
                     {{ 
