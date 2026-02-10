@@ -99,5 +99,19 @@ Improves clarity, scalability, and project-wise task management.
    ```bash
    git clone https://github.com/lavirana/task-management-system.git
 
+   
+## Project Screenshots
+
+<img width="1421" height="768" alt="Screenshot 2026-02-10 at 2 02 51 PM" src="https://github.com/user-attachments/assets/e8ebf442-425b-42e4-a9d1-a4d82c7cf34f" />
+
+<img width="1427" height="768" alt="Screenshot 2026-02-10 at 2 02 57 PM" src="https://github.com/user-attachments/assets/9dcbb235-292a-4ca0-83c0-0e727c430fc7" />
+
+<img width="1429" height="775" alt="Screenshot 2026-02-10 at 2 03 03 PM" src="https://github.com/user-attachments/assets/37fe32bc-1803-48bb-b411-3620dbc7c699" />
+
+<img width="1427" height="773" alt="Screenshot 2026-02-10 at 2 03 10 PM" src="https://github.com/user-attachments/assets/14d20e08-a55c-4136-b4d8-1f300273bffb" />
+
+<img width="1425" height="775" alt="Screenshot 2026-02-10 at 2 03 29 PM" src="https://github.com/user-attachments/assets/dc88bd1d-94c4-4c9d-8ba8-52ebf4b9e65d" />
+
+<img width="1420" height="775" alt="Screenshot 2026-02-10 at 2 03 37 PM" src="https://github.com/user-attachments/assets/8bb4ac98-4f74-4ad1-920f-962609cbee2a" />
 
 
