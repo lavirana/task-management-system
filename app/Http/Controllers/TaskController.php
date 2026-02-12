@@ -291,5 +291,18 @@ public function update(Request $request, $id)
             })
         );
     }
+
+    public function updateStatusKanban(Request $request){
+        $task = Task::findOrFail($request->task_id);
+        $task->update([
+            'status' => $request->status
+        ]);
+        return response()->json(['success' => true]);
+    }
+
+    public function kanban(){
+        $tasks = Task::all();
+        return view('tasks.kanban',compact('tasks'));
+    }
     
 }

@@ -23,13 +23,13 @@
             </div>
             <!-- Menu -->
   <!-- Menu -->
-<div class="relative space-x-6" style="margin-left: 45%;"
+<div class="relative space-x-6" style="margin-left: 23%;"
      x-data="{ open: false }">
      @auth
     <!-- Bell Icon -->
     <button @click="open = !open"
             class="relative focus:outline-none text-lg">
-        🔔
+        🔔 
         @if(auth()->user()->unreadNotifications->count())
             <span
                 class="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full px-2">
@@ -37,6 +37,7 @@
             </span>
         @endif
     </button>
+    Notifications
     <!-- Dropdown -->
     <div x-show="open"
          @click.outside="open = false"
@@ -77,7 +78,10 @@
 </div>
 @endauth
              <!-- Menu -->
-                     <div class="space-x-6"> 
+                <div class="space-x-6"> 
+                <a href="{{ route('tasks.kanban') }}" class="text-gray-700 hover:text-blue-600 font-medium">
+                         Kanban Board
+                </a>
                 <a href="{{ route('tasks.index') }}"
                    class="text-gray-700 hover:text-blue-600 font-medium">
                     All Tasks
@@ -345,6 +349,37 @@ document.addEventListener('change', function (e) {
         responsive: true
         });
     </script>
-  
+  <script>
+function kanbanBoard() {
+    return {
+        draggedTaskId: null,
+
+        dragTask(event, taskId) {
+            this.draggedTaskId = taskId;
+        },
+
+        dropTask(event, newStatus) {
+
+            fetch("{{ route('tasks.update.status.kanban') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document
+                        .querySelector('meta[name="csrf-token"]')
+                        .getAttribute('content')
+                },
+                body: JSON.stringify({
+                    task_id: this.draggedTaskId,
+                    status: newStatus
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                location.reload(); // simple refresh
+            });
+        }
+    }
+}
+</script>
 </body>
 </html>

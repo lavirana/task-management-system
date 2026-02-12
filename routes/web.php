@@ -49,5 +49,7 @@ Route::get('/notifications/{userId}', [App\Http\Controllers\NotificationControll
 
 Route::get('/tasks/calendar', [TaskController::class, 'calendar'])->name('tasks.calendar');
 Route::get('/tasks/calendar-date', [TaskController::class, 'calendarData'])->name('tasks.calendar.data');
+Route::post('/tasks/update-status',[TaskController::class, 'updateStatusKanban'])->name('tasks.update.status.kanban');
+Route::get('/tasks/kanban', [TaskController::class, 'kanban'])->name('tasks.kanban');
 
 require __DIR__.'/auth.php';
