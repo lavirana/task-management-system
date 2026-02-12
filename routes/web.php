@@ -52,4 +52,9 @@ Route::get('/tasks/calendar-date', [TaskController::class, 'calendarData'])->nam
 Route::post('/tasks/update-status',[TaskController::class, 'updateStatusKanban'])->name('tasks.update.status.kanban');
 Route::get('/tasks/kanban', [TaskController::class, 'kanban'])->name('tasks.kanban');
 
+Route::get('/tasks/trash', [TaskController::class, 'trash'])->name('tasks.trash');
+Route::post('/tasks/{id}/restore', [TaskController::class, 'restore'])->name('tasks.restore');
+Route::delete('/tasks/{id}/force-delete', [TaskController::class, 'forceDelete'])->name('tasks.forceDelete');
+
+
 require __DIR__.'/auth.php';

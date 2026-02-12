@@ -304,5 +304,21 @@ public function update(Request $request, $id)
         $tasks = Task::all();
         return view('tasks.kanban',compact('tasks'));
     }
+
+    public function trash(){
+        $tasks = Task::onlyTrashed()->get();
+        return view('tasks.trash', compact('tasks'));
+    }
+    public function restore($id){
+        $task = Task::onlyTrashed()->findOrFail($id);
+        $task->restore();
+        return redirect()->route('tasks.trash')->with('success', 'Task restored successfully.');
+    }
+    public function forceDelete(){
+        $task = Task::onlyTrashed()->findOrFail($id);
+        $task->forceDelete();
+
+        return redirect()->route('tasks.trash')->with('success', 'Task permanently deleted.');
+    }
     
 }

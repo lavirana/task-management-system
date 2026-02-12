@@ -46,34 +46,27 @@
             🔔 New Notifications
         </div>
         @forelse(auth()->user()->unreadNotifications as $notification)
-
                 <div class="p-2 border-b hover:bg-gray-50">
-
                     {{-- Task Assigned --}}
                     @if($notification->type === 'App\\Notifications\\TaskAssignedNotification')
                         🧑‍💼 <strong>Task Assigned</strong><br>
                         {{ $notification->data['message'] ?? $notification->data['title'] }}
-
                     {{-- Task Due Reminder --}}
                     @elseif($notification->type === 'App\\Notifications\\TaskDueReminderNotification')
                         ⏰ <strong>Due Reminder</strong><br>
                         {{ $notification->data['message'] }}
-
                     @endif
-
                     <br>
                     <small class="text-gray-500">
                         {{ $notification->created_at->diffForHumans() }}
                     </small>
                 </div>
-
                 @empty
                 <div class="p-2 text-gray-500 text-center">
                     No new notifications
                 </div>
                 @endforelse
               <a href="{{ route('notifications.index', auth()->id()) }}" style="padding: 5px;font-size: 14px;font-weight: 300;">All Notifications </a>
-
     </div>
 </div>
 @endauth
@@ -86,7 +79,6 @@
                    class="text-gray-700 hover:text-blue-600 font-medium">
                     All Tasks
                 </a>
-
                 <a href="{{ route('tasks.create') }}"
                    class="text-gray-700 hover:text-blue-600 font-medium">
                     Add Task
@@ -96,6 +88,7 @@
                    class="text-gray-700 hover:text-blue-600 font-medium">
                     Check Activity Logs
                 </a>
+                <a href="{{ route('tasks.trash') }}">Trash</a>
                 <form method="POST" action="{{ route('logout') }}" style="float: right;">
                     @csrf
                     <button
@@ -119,8 +112,6 @@
       <!-- DataTables JS -->
       <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js"></script>
-
-
       <script>
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
@@ -136,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
-
     calendar.render();
 });
 </script>
@@ -182,14 +172,12 @@ function loadChartData() {
         });
 }
 function drawChart(apiData) {
-
     var chartData = google.visualization.arrayToDataTable([
         ['Status', 'Numbers'],
         ['Completed', apiData.Done],
         ['Pending', apiData.pending],
         ['In Progress', apiData.in_progress]
     ]);
-
     var options = {
         width: 600,
         legend: { position: 'none' },
@@ -204,11 +192,9 @@ function drawChart(apiData) {
         },
         bar: { groupWidth: "90%" }
     };
-
     var chart = new google.charts.Bar(
         document.getElementById('top_x_div')
     );
-
     chart.draw(chartData, options);
 }
 </script>
