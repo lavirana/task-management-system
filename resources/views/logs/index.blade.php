@@ -15,6 +15,7 @@
             </tr>
         </thead>
         <tbody>
+            @if($logs->isNotEmpty())
             @foreach($logs as $log)
             <tr class="border-t">
                 <td class="p-3">{{ $log->user->name ?? 'Not Found' }}</td>
@@ -29,6 +30,16 @@
                 <td>{{ $log->created_at->format('Y-m-d H:i') }}</td>
             </tr>
             @endforeach
+            @else
+                <tr colspan="4">
+                <td></td>
+                    <td></td>
+                    <td class="p-3">
+                    No Logs Found
+                    </td>
+                    <td></td>
+                </tr>
+            @endif
         </tbody>
     </table>
 
