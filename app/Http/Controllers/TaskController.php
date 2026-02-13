@@ -12,6 +12,11 @@ class TaskController extends Controller
 {
     public function index(Request $request){
         $query = Task::with('assignedUser'); 
+
+        if(auth()->user()->role !== 'admin'){
+            $query->where('assigned_to_user_id', auth()->id());
+        }
+
             if($request->filled('status')){
                 $query->where('status',$request->status);
             }
@@ -144,6 +149,10 @@ public function update(Request $request, $id)
     {
         $task = Task::findOrFail($id);
     
+        if(auth()->user()->role !== 'admin'){
+            abort(403, 'Only Admin can delete tasks');
+        }
+
         // save task data BEFORE delete
         $oldValues = $task->toArray();
     

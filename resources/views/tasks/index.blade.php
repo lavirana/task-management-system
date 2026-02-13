@@ -59,6 +59,7 @@
         </thead>
         <tbody>
             @foreach($tasks as $task)
+        
             <tr class="border-t">
                 <td class="p-3">{{ $task->project?->name ?? 'No Project' }}</td>
                 <td>{{ $task->title }}</td>
@@ -93,7 +94,7 @@
                 <select name="assign_user" data-task-id="{{ $task->id }}">
                 <option value="">Select User</option>
                     @foreach($users as $user)
-                        <option value="{{ $user->id }}" <?php if(isset($task->assignedUser) && $task->assignedUser->id == $user->id) echo 'selected'; ?>>
+                        <option value="{{ $user->id }}" <?php if(isset($task->assignedUser) && $task->assignedUser->id == $user->id) echo 'selected'; ?>  <?php if(isset($task->assignedUser) && $task->assignedUser->role != 'admin') echo 'disabled'; ?>  >
                             {{ $user->name }}
                         </option>
                     @endforeach
