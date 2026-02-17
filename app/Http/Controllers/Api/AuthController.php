@@ -5,13 +5,31 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Task;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\TaskResource;
 
 class AuthController extends Controller
 {
 
     use ApiResponse;
+
+
+    public function index(Request $request){
+        $query = Task::query();
+        if($request->status){
+            $query->where('status', $request->status);
+        }
+        if($request->search){
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+        if($request->sort_by){
+            $query->orderBy($request->sort_by, 'desc');
+        }
+        return TaskResource::collection($query->paginate(10));
+    }
+
 
     public function register(Request $request)
     {
@@ -43,4 +61,27 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Logged Out']);
     }
+
+    public function destroy($id){
+        $task = Task::findOrFail($id);
+        $task->delete();
+        return response()->json(['message' => 'Task deleted']);
+    }
+
+    public function trash(){
+        return Task::onlyTrashed()->get();
+    }
+
+    public function restore($id){
+        Task::withterashed()->findOrFail($id)->restore();
+        return response()->json(['message' => 'Task restored']);
+    }
+
+    public function foreceDelete($id){
+        Task::withTrashed()->findOrFail($id)->foreceDelete();
+        return response()->json(['message' => 'Task permanently deleted']);
+    }
+
+
+
 }
