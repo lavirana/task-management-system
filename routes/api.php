@@ -13,6 +13,7 @@ Route::prefix('v1')->group(function() {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/user', fn(Request $r) => $r->user());
         Route::get('/tasks', [TaskController::class, 'index']);
+        Route::get('/tasks/{id}',[TaskController::class, 'view']);
 
         Route::middleware('role:admin')->group(function() {
              //Route::delete('/tasks/{id}',[AuthController::class, 'destroy']);

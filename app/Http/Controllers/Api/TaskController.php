@@ -1,14 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\API;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Http\Resources\TaskResource;
+use App\Traits\ApiResponse;
 
 class TaskController extends Controller
 {
+    use ApiResponse;
     public function index(Request $request){
         $query = Task::query();
         if($request->status){
@@ -29,6 +30,14 @@ class TaskController extends Controller
             'status' => 'pending',
             'user_id' => $request->user()->id
         ]);
+        return response()->json($task);
+    }
+
+    public function view($id){
+        $task = Task::find($id);
+        if(!$task){
+            return $this->error("Task with ID $id not found in our database.", 404);
+        }
         return response()->json($task);
     }
 }

@@ -12,4 +12,5 @@ class NotificationController extends Controller
         $notifications = $query->latest()->paginate(10);
         return view('notifications.index', compact('notifications'));
     }
+    
 }
