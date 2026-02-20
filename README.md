@@ -114,4 +114,5 @@ Improves clarity, scalability, and project-wise task management.
 
 <img width="1420" height="775" alt="Screenshot 2026-02-10 at 2 03 37 PM" src="https://github.com/user-attachments/assets/8bb4ac98-4f74-4ad1-920f-962609cbee2a" />
 
+<img width="1440" height="783" alt="Screenshot 2026-02-20 at 3 19 15 PM" src="https://github.com/user-attachments/assets/b9958cdb-e09e-4a5d-b786-267003683517" />
 
