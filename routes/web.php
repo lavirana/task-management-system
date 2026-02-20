@@ -56,5 +56,7 @@ Route::get('/tasks/trash', [TaskController::class, 'trash'])->name('tasks.trash'
 Route::post('/tasks/{id}/restore', [TaskController::class, 'restore'])->name('tasks.restore');
 Route::delete('/tasks/{id}/force-delete', [TaskController::class, 'forceDelete'])->name('tasks.forceDelete');
 
+Route::post('/tasks/calendar-store', [TaskController::class, 'calendarStore'])
+    ->name('tasks.calendar.store');
 
 require __DIR__.'/auth.php';

@@ -329,5 +329,22 @@ public function update(Request $request, $id)
 
         return redirect()->route('tasks.trash')->with('success', 'Task permanently deleted.');
     }
-    
+
+
+    public function calendarStore(Request $request)
+{
+    $request->validate([
+        'title' => 'required',
+        'due_date' => 'required|date'
+    ]);
+
+    Task::create([
+        'title' => $request->title,
+        'due_date' => $request->due_date,
+        'created_by' => auth()->id(),
+    ]);
+
+    return response()->json(['success' => true]);
+}
+
 }

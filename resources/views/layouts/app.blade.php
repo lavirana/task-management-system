@@ -8,7 +8,7 @@
        <!-- DataTables CSS -->
        <link href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" rel="stylesheet">
        <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
-
+       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
        <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 <body class="bg-gray-100">
@@ -104,6 +104,7 @@
     <div class="max-w-7xl mx-auto">
         @yield('content')
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
       <!-- jQuery -->
@@ -120,14 +121,36 @@ document.addEventListener('DOMContentLoaded', function () {
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         events: "{{ route('tasks.calendar.data') }}",
-        eventClick(info) {
-            if (info.event.url) {
-                info.jsEvent.preventDefault();
-                window.location.href = info.event.url;
-            }
+
+        dateClick: function(info) {
+            document.getElementById('modal_due_date').value = info.dateStr;
+            var myModal = new bootstrap.Modal(document.getElementById('taskModal'));
+            myModal.show();
         }
     });
+
     calendar.render();
+
+    // ✅ Handle AJAX submit
+    document.getElementById('calendarTaskForm').addEventListener('submit', function(e){
+        e.preventDefault();
+
+        let formData = new FormData(this);
+
+        fetch("{{ route('tasks.calendar.store') }}", {
+            method: "POST",
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            calendar.refetchEvents();
+            bootstrap.Modal.getInstance(document.getElementById('taskModal')).hide();
+            this.reset();
+        });
+    });
 });
 </script>
 @if(Route::is('dashboard'))
@@ -367,5 +390,6 @@ function kanbanBoard() {
     }
 }
 </script>
+
 </body>
 </html>
