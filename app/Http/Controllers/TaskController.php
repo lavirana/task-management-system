@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Project;
 use App\Models\Tag;
 use App\Notifications\TaskAssignedNotification;
+use Illuminate\Support\Facades\Cache;
 
 class TaskController extends Controller
 {
@@ -176,11 +177,16 @@ public function update(Request $request, $id)
     }
     public function taskCount(Request $request, $status = null)
     {
+        $cacheKey = 'task_count_'.($status ?? 'all');
+        $taskCount = Cache::remember($cacheKey, 60, function () use ($status) {
+
         $query = Task::query();
         if (!empty($status)) {
             $query->where('status', $status);
         }
-        $taskCount = $query->count();
+        return $query->count();
+    });
+
         return response()->json(['count' => $taskCount]);
     }
     public function taskCountStatusWise(Request $request)
@@ -306,6 +312,10 @@ public function update(Request $request, $id)
         $task->update([
             'status' => $request->status
         ]);
+        Cache::forget('task_count_all');
+        Cache::forget('task_count_pending');
+        Cache::forget('task_count_in_progress');
+        Cache::forget('task_count_done');
         return response()->json(['success' => true]);
     }
 
@@ -329,22 +339,5 @@ public function update(Request $request, $id)
 
         return redirect()->route('tasks.trash')->with('success', 'Task permanently deleted.');
     }
-
-
-    public function calendarStore(Request $request)
-{
-    $request->validate([
-        'title' => 'required',
-        'due_date' => 'required|date'
-    ]);
-
-    Task::create([
-        'title' => $request->title,
-        'due_date' => $request->due_date,
-        'created_by' => auth()->id(),
-    ]);
-
-    return response()->json(['success' => true]);
-}
-
+    
 }
