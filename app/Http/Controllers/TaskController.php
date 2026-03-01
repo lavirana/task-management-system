@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\User;
@@ -11,64 +12,65 @@ use Illuminate\Support\Facades\Cache;
 
 class TaskController extends Controller
 {
-    public function index(Request $request){
-        $query = Task::with('assignedUser'); 
+    public function index(Request $request)
+    {
+        $query = Task::with('assignedUser');
 
-        if(auth()->user()->role !== 'admin'){
+        if (auth()->user()->role !== 'admin') {
             $query->where('assigned_to_user_id', auth()->id());
         }
 
-            if($request->filled('status')){
-                $query->where('status',$request->status);
-            }
-            if($request->filled('priority')){
-                $query->where('priority', $request->priority);
-            }
-            $tasks = $query->latest()->paginate(10);
-            $users = User::select('id', 'name')->get();
-            $projects = Project::select('id', 'name')->get();
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('priority')) {
+            $query->where('priority', $request->priority);
+        }
+        $tasks = $query->latest()->paginate(10);
+        $users = User::select('id', 'name')->get();
+        $projects = Project::select('id', 'name')->get();
 
-            return view('tasks.index', compact('tasks', 'users','projects'));
+        return view('tasks.index', compact('tasks', 'users', 'projects'));
     }
-    public function create(){
+    public function create()
+    {
         $users = User::select('id', 'name')->get();
         $projects = Project::select('id', 'name')->get();
         $tags = Tag::all();
 
-           return view('tasks.create', compact('users', 'projects', 'tags'));
+        return view('tasks.create', compact('users', 'projects', 'tags'));
     }
     public function store(Request $request)
-{
-    //dd($request->all());
-    $validate = $request->validate([
-        'title' => 'required',
-        'project_id' => 'nullable|exists:projects,id',
-        'description' => 'required',
-        'priority' => 'required',
-        'due_date' => 'required',
-        'assigned_to_user_id' => 'nullable|exists:users,id'
-    ]);
+    {
+        $validate = $request->validate([
+            'title' => 'required',
+            'project_id' => 'nullable|exists:projects,id',
+            'description' => 'required',
+            'priority' => 'required',
+            'due_date' => 'required',
+            'assigned_to_user_id' => 'nullable|exists:users,id'
+        ]);
 
-    $task = Task::create([
-        'title' => $validate['title'],
-        'project_id' => $validate['project_id'],
-        'description' => $validate['description'],
-        'priority' => $validate['priority'],
-        'assigned_to_user_id' => $validate['assigned_to_user_id'] ?? null,
-        'due_date' => $validate['due_date'],
-        'attachments.*' => 'nullable|file|max:2048',
-        'status' => 'pending',
-        'created_by_admin_id' => auth()->id(),
-    ]);
+        $task = Task::create([
+            'title' => $validate['title'],
+            'project_id' => $validate['project_id'],
+            'description' => $validate['description'],
+            'priority' => $validate['priority'],
+            'assigned_to_user_id' => $validate['assigned_to_user_id'] ?? null,
+            'due_date' => $validate['due_date'],
+            'attachments.*' => 'nullable|file|max:2048',
+            'status' => 'pending',
+            'created_by_admin_id' => auth()->id(),
+        ]);
 
-            //Attach Tags
-            if($request->filled('tags')){
-                $task->tags()->attach($request->tags);
-            }
+        //Attach Tags
+        if ($request->filled('tags')) {
+            $task->tags()->attach($request->tags);
+        }
 
-    //store file
-        if($request->hasFile('attachments')){
-            foreach($request->file('attachments') as $file){
+        //store file
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
                 $path = $file->store('attachments', 'public');
                 $task->attachments()->create([
                     'file_name' => $file->getClientOriginalName(),
@@ -78,114 +80,116 @@ class TaskController extends Controller
             }
         }
 
-//maintain log activity
-    logActivity(
-        'Task created',
-        $task,
-        null,
-        $validate
-    );
+        //maintain log activity
+        logActivity(
+            'Task created',
+            $task,
+            null,
+            $validate
+        );
 
-    $assignedUser = User::find($request->assigned_to_user_id);
-    $assignedUser->notify(new TaskAssignedNotification($task));
-
-    return redirect()
-        ->route('tasks.index')
-        ->with('success', 'Task Created successfully!');
-}
-
-public function update(Request $request, $id)
-{
-    $validated = $request->validate([
-        'title' => 'required',
-        'description' => 'required',
-        'status' => 'required|in:pending,in_progress,done',
-        'priority' => 'required|in:low,medium,high',
-        'assigned_date' => 'nullable|date',
-        'due_date' => 'nullable|date',
-        'assigned_to_user_id' => 'nullable|exists:users,id',
-    ]);
-
-    $task = Task::findOrFail($id);
-
-    // 🔥 OLD values for activity log
-    $oldValues = $task->only([
-        'title',
-        'description',
-        'status',
-        'due_date',
-    ]);
-
-    // 🔥 IMPORTANT PART (REMINDER RESET LOGIC)
-    if (
-        isset($validated['due_date']) &&
-        $task->due_date != $validated['due_date']
-    ) {
-        $task->due_reminder_sent = false;
+        $assignedUser = User::find($request->assigned_to_user_id);
+        $assignedUser->notify(new TaskAssignedNotification($task));
+        $this->clearDashboardCache();
+        return redirect()
+            ->route('tasks.index')
+            ->with('success', 'Task Created successfully!');
     }
 
-    // 🔥 Update task
-    $task->update($validated);
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'status' => 'required|in:pending,in_progress,done',
+            'priority' => 'required|in:low,medium,high',
+            'assigned_date' => 'nullable|date',
+            'due_date' => 'nullable|date',
+            'assigned_to_user_id' => 'nullable|exists:users,id',
+        ]);
 
-    logActivity(
-        'Task updated',
-        $task,
-        $oldValues,
-        $validated
-    );
+        $task = Task::findOrFail($id);
 
-    return redirect()
-        ->route('tasks.index')
-        ->with('success', 'Task updated successfully!');
-}
+        // 🔥 OLD values for activity log
+        $oldValues = $task->only([
+            'title',
+            'description',
+            'status',
+            'due_date',
+        ]);
+
+        // 🔥 IMPORTANT PART (REMINDER RESET LOGIC)
+        if (
+            isset($validated['due_date']) &&
+            $task->due_date != $validated['due_date']
+        ) {
+            $task->due_reminder_sent = false;
+        }
+
+        // 🔥 Update task
+        $task->update($validated);
+
+        logActivity(
+            'Task updated',
+            $task,
+            $oldValues,
+            $validated
+        );
+        $this->clearDashboardCache();
+        return redirect()
+            ->route('tasks.index')
+            ->with('success', 'Task updated successfully!');
+    }
 
 
-    public function edit($id){
-        $query = Task::with('assignedUser'); 
+    public function edit($id)
+    {
+        $query = Task::with('assignedUser');
         $task = $query->findOrFail($id);
         $users = User::select('id', 'name')->get();
-        return view('tasks.edit',compact('task', 'users'));
+        return view('tasks.edit', compact('task', 'users'));
     }
     public function destroy($id)
     {
         $task = Task::findOrFail($id);
-    
-        if(auth()->user()->role !== 'admin'){
+
+        if (auth()->user()->role !== 'admin') {
             abort(403, 'Only Admin can delete tasks');
         }
 
         // save task data BEFORE delete
         $oldValues = $task->toArray();
-    
+
         $task->delete();
-    
+
         logActivity(
             'Task Deleted',
             null,          // task is gone
             $oldValues,    // <-- THIS is important
             null
         );
-    
+        $this->clearDashboardCache();
         return redirect()->route('tasks.index')
             ->with('success', 'Task deleted successfully!');
     }
-    
-    
-    public function view($id){
+
+
+    public function view($id)
+    {
         $task = Task::with('comments.user')->findOrFail($id);
         return view('tasks.show', compact('task'));
     }
     public function taskCount(Request $request, $status = null)
     {
-        $cacheKey = 'task_count_'.($status ?? 'all');
+        $cacheKey = 'task_count_' . ($status ?? 'all');
         $taskCount = Cache::remember($cacheKey, 60, function () use ($status) {
 
-        $query = Task::query();
-        if (!empty($status)) {
-            $query->where('status', $status);
-        }
-        return $query->count();
-    });
+            $query = Task::query();
+            if (!empty($status)) {
+                $query->where('status', $status);
+            }
+            return $query->count();
+        });
 
         return response()->json(['count' => $taskCount]);
     }
@@ -204,16 +208,16 @@ public function update(Request $request, $id)
     {
         try {
             $task = Task::find($request->task_id);
-    
+
             if (!$task) {
                 return response()->json([
                     'error' => 'Task not found'
                 ], 404);
             }
-    
+
             $task->assigned_to_user_id = $request->user_id;
             $task->save();
-    
+
             return response()->json([
                 'success' => true
             ]);
@@ -225,18 +229,18 @@ public function update(Request $request, $id)
     }
     public function changeStatus(Request $request)
     {
-        try{
+        try {
             $task = Task::find($request->task_id);
-    
+
             if (!$task) {
                 return response()->json([
                     'error' => 'Task not found'
                 ], 404);
             }
-    
+
             $task->status = $request->status;
             $task->save();
-    
+
             return response()->json([
                 'success' => true
             ]);
@@ -248,9 +252,9 @@ public function update(Request $request, $id)
     }
     public function changePriority(Request $request)
     {
-        try{
+        try {
             $task = Task::find($request->task_id);
-    
+
             if (!$task) {
                 return response()->json([
                     'error' => 'Task not found'
@@ -258,7 +262,7 @@ public function update(Request $request, $id)
             }
             $task->priority = $request->priority;
             $task->save();
-    
+
             return response()->json([
                 'success' => true
             ]);
@@ -268,10 +272,11 @@ public function update(Request $request, $id)
             ], 500);
         }
     }
-    public function updateAssignedDate(Request $request){
-        try{
+    public function updateAssignedDate(Request $request)
+    {
+        try {
             $task = Task::find($request->task_id);
-    
+
             if (!$task) {
                 return response()->json([
                     'error' => 'Task not found'
@@ -279,7 +284,7 @@ public function update(Request $request, $id)
             }
             $task->assigned_date = $request->assigned_date;
             $task->save();
-    
+
             return response()->json([
                 'success' => true
             ]);
@@ -290,13 +295,15 @@ public function update(Request $request, $id)
         }
     }
 
-    public function calendar(){
+    public function calendar()
+    {
         return view('tasks.calendar');
     }
-    public function calendarData(){
+    public function calendarData()
+    {
         $tasks = Task::whereNotNull('due_date')->get();
         return response()->json(
-            $tasks->map(function ($task){
+            $tasks->map(function ($task) {
                 return [
                     'id' => $task->id,
                     'title' => $task->title,
@@ -307,7 +314,8 @@ public function update(Request $request, $id)
         );
     }
 
-    public function updateStatusKanban(Request $request){
+    public function updateStatusKanban(Request $request)
+    {
         $task = Task::findOrFail($request->task_id);
         $task->update([
             'status' => $request->status
@@ -319,25 +327,40 @@ public function update(Request $request, $id)
         return response()->json(['success' => true]);
     }
 
-    public function kanban(){
+    public function kanban()
+    {
         $tasks = Task::all();
-        return view('tasks.kanban',compact('tasks'));
+        return view('tasks.kanban', compact('tasks'));
     }
 
-    public function trash(){
+    public function trash()
+    {
         $tasks = Task::onlyTrashed()->get();
         return view('tasks.trash', compact('tasks'));
     }
-    public function restore($id){
+    public function restore($id)
+    {
         $task = Task::onlyTrashed()->findOrFail($id);
         $task->restore();
         return redirect()->route('tasks.trash')->with('success', 'Task restored successfully.');
     }
-    public function forceDelete(){
+    public function forceDelete()
+    {
         $task = Task::onlyTrashed()->findOrFail($id);
         $task->forceDelete();
 
         return redirect()->route('tasks.trash')->with('success', 'Task permanently deleted.');
     }
-    
+
+    // Add this private method at bottom of TaskController:
+    private function clearDashboardCache()
+    {
+        Cache::forget('dashboard_stats');
+        Cache::forget('dashboard_recent_tasks');
+        // Also clear existing cache keys you already have:
+        Cache::forget('task_count_all');
+        Cache::forget('task_count_pending');
+        Cache::forget('task_count_in_progress');
+        Cache::forget('task_count_done');
+    }
 }

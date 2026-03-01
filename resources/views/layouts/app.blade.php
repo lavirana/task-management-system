@@ -154,7 +154,9 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @if(Route::is('dashboard'))
-<script>
+
+
+<!--<script>
 document.addEventListener('DOMContentLoaded', function () {
     fetch('/task_count/pending')
         .then(response => response.json())
@@ -179,7 +181,8 @@ document.addEventListener('DOMContentLoaded', function (){
             if (progress) progress.innerText = data.count;
         });
 })
-</script>
+</script>-->
+
 <script>
 google.charts.load('current', { packages: ['bar'] });
 google.charts.setOnLoadCallback(loadChartData);

@@ -6,21 +6,42 @@
     <h1 class="text-2xl font-bold mb-6">Task Dashboard</h1>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white p-5 rounded shadow">
-            <h2 class="text-gray-600">In Progress Tasks</h2>
-            <p class="text-3xl font-bold" id="progressTasks">0</p>
-        </div>
+    <div class="bg-white p-5 rounded shadow">
+    <h2 class="text-gray-600">In Progress Tasks</h2>
+    <p class="text-3xl font-bold" id="progressTasks">
+        {{ $stats['in_progress_tasks'] }}
+    </p>
+</div>
 
-        <div class="bg-yellow-100 p-5 rounded shadow">
-            <h2 class="text-gray-600">Pending Tasks</h2>
-            <p class="text-3xl font-bold" id="pendingTasks">0</p>
-        </div>
+<div class="bg-yellow-100 p-5 rounded shadow">
+    <h2 class="text-gray-600">Pending Tasks</h2>
+    <p class="text-3xl font-bold" id="pendingTasks">
+        {{ $stats['pending_tasks'] }}
+    </p>
+</div>
 
-        <div class="bg-green-100 p-5 rounded shadow">
-            <h2 class="text-gray-600">Completed Tasks</h2>
-            <p class="text-3xl font-bold" id="completedTasks">0</p>
-        </div>
+<div class="bg-green-100 p-5 rounded shadow">
+    <h2 class="text-gray-600">Completed Tasks</h2>
+    <p class="text-3xl font-bold" id="completedTasks">
+        {{ $stats['completed_tasks'] }}
+    </p>
+</div>
+
+<div class="bg-gray-100 p-5 rounded shadow">
+    <h2 class="text-blue-600">Total Tasks</h2>
+    <p class="text-3xl font-bold" id="totalTasks">
+        {{ $stats['total_task'] }}
+    </p>
+</div>
+
+<div class="bg-gray-100 p-5 rounded shadow">
+    <h2 class="text-blue-600">Total Users</h2>
+    <p class="text-3xl font-bold" id="totalUsers">
+        {{ $stats['total_users'] }}
+    </p>
+</div>
     </div>
+    <br>
     <hr>
     <br>
     <div class="grid grid-cols-2 gap-6">

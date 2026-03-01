@@ -6,17 +6,26 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LogController;
 use App\Models\Task;
+use App\Jobs\TestJob;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+
+// Replace this in web.php:
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
+/*
 Route::get('/dashboard', function () {
     $query = Task::with('assignedUser'); 
     $query->where('status', 'Pending');
     $tasks = $query->latest()->take(5)->get();
     return view('dashboard', compact('tasks'));
 })->middleware(['auth', 'verified'])->name('dashboard');
+*/
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -58,5 +67,11 @@ Route::delete('/tasks/{id}/force-delete', [TaskController::class, 'forceDelete']
 
 Route::post('/tasks/calendar-store', [TaskController::class, 'calendarStore'])
     ->name('tasks.calendar.store');
+
+Route::get('/test-queue', function () {
+    TestJob::dispatch();
+    return 'Test job dispatched!';
+});
+
 
 require __DIR__.'/auth.php';
