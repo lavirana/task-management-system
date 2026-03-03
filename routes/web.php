@@ -13,6 +13,8 @@ Route::get('/', function () {
 });
 
 
+Route::get('/view_task/{id}', [TaskController::class, 'viewtaskById'])->name('view_task');
+
 // Replace this in web.php:
 Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])

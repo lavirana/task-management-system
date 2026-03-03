@@ -9,9 +9,21 @@ use App\Models\Project;
 use App\Models\Tag;
 use App\Notifications\TaskAssignedNotification;
 use Illuminate\Support\Facades\Cache;
+use App\Services\TaskService;
 
 class TaskController extends Controller
 {
+    protected $taskService;
+    public function __construct(TaskService $taskService)
+    {
+        $this->taskService = $taskService;
+        //$this->middleware('auth');
+    }
+
+
+    public function viewtaskById($id){
+        return $this->taskService->getTaskById($id);
+    }
 
     public function index(Request $request){
         $userId = auth()->id();
