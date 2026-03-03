@@ -7,6 +7,10 @@ use App\UserRepositoryInterface;
 use App\Repositories\UserRepository;
 use App\PaymentGatewayInterface;
 use App\Services\RazorpayService;
+use App\SmsServiceInterface;
+use App\Services\TwilioSmsService;
+use App\CacheServiceInterface;
+use App\Services\RedisCacheService;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -24,8 +28,12 @@ class AppServiceProvider extends ServiceProvider
          $this->app->bind(
             UserRepositoryInterface::class,
             PaymentGatewayInterface::class,
+            SmsServiceInterface::class,
+            CacheServiceInterface::class,
             UserRepository::class,
-            RazorpayService::class
+            RazorpayService::class,
+            TwilioSmsService::class,
+            RedisCacheService::class,
          );
     }
 
