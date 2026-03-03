@@ -12,7 +12,41 @@ use Illuminate\Support\Facades\Cache;
 
 class TaskController extends Controller
 {
-    public function index(Request $request)
+
+    public function index(Request $request){
+        $userId = auth()->id();
+        $status = $request->get('status', '');
+        $priority = $request->get('priority', '');
+
+        // unique cache key per user + filters
+        $cachekey = "task_list_{$userId}_status_{$status}_priority_{$priority}";
+        $tasks = Cache::remember($cachekey, 60, function() use ($request, $userId){
+            $query = Task::with('assignedUser');
+
+            if(auth()->user()->role !== 'admin'){
+                $query->where('assigned_to_user_id', $userId);
+            }
+
+            if ($request->filled('status')) {
+                $query->where('status', $request->status);
+            }
+
+            if ($request->filled('priority')) {
+                $query->where('priority', $request->priority);
+            }
+        return $query->latest()->paginate(10);
+        });
+        $users = Cache::remember('all_users_list',120,function(){
+            return User::select('id', 'name')->get();
+        });
+
+        $projects = Cache::remember('all_projects_list', 120, function () {
+            return Project::select('id', 'name')->get();
+        });
+        return view('tasks.index',compact('tasks', 'users', 'projects'));
+    }
+
+  /*  public function index(Request $request)
     {
         $query = Task::with('assignedUser');
 
@@ -32,6 +66,8 @@ class TaskController extends Controller
 
         return view('tasks.index', compact('tasks', 'users', 'projects'));
     }
+*/
+
     public function create()
     {
         $users = User::select('id', 'name')->get();
@@ -90,7 +126,7 @@ class TaskController extends Controller
 
         $assignedUser = User::find($request->assigned_to_user_id);
         $assignedUser->notify(new TaskAssignedNotification($task));
-        $this->clearDashboardCache();
+        $this->clearCache();
         return redirect()
             ->route('tasks.index')
             ->with('success', 'Task Created successfully!');
@@ -135,7 +171,7 @@ class TaskController extends Controller
             $oldValues,
             $validated
         );
-        $this->clearDashboardCache();
+        $this->clearCache();
         return redirect()
             ->route('tasks.index')
             ->with('success', 'Task updated successfully!');
@@ -168,7 +204,7 @@ class TaskController extends Controller
             $oldValues,    // <-- THIS is important
             null
         );
-        $this->clearDashboardCache();
+        $this->clearCache();
         return redirect()->route('tasks.index')
             ->with('success', 'Task deleted successfully!');
     }
@@ -344,7 +380,7 @@ class TaskController extends Controller
         $task->restore();
         return redirect()->route('tasks.trash')->with('success', 'Task restored successfully.');
     }
-    public function forceDelete()
+    public function forceDelete($id)
     {
         $task = Task::onlyTrashed()->findOrFail($id);
         $task->forceDelete();
@@ -353,8 +389,24 @@ class TaskController extends Controller
     }
 
     // Add this private method at bottom of TaskController:
-    private function clearDashboardCache()
+    private function clearCache()
     {
+
+        $userId = auth()->id();
+
+    // Clear dashboard cache
+    Cache::forget('dashboard_stats');
+    Cache::forget('dashboard_recent_tasks');
+
+    $statuses   = ['', 'pending', 'in_progress', 'done'];
+    $priorities = ['', 'low', 'medium', 'high'];
+
+    foreach ($statuses as $status) {
+        foreach ($priorities as $priority) {
+                Cache::forget("task_list_{$userId}_status_{$status}_priority_{$priority}");
+        }
+    }
+
         Cache::forget('dashboard_stats');
         Cache::forget('dashboard_recent_tasks');
         // Also clear existing cache keys you already have:
