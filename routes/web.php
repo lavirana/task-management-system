@@ -12,7 +12,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
+Route::get('/all_tasks', [TaskController::class, 'allTasks'])->name('all_tasks');
 Route::get('/view_task/{id}', [TaskController::class, 'viewtaskById'])->name('view_task');
 
 // Replace this in web.php:

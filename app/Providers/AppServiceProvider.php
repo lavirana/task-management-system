@@ -12,6 +12,8 @@ use App\Services\TwilioSmsService;
 use App\CacheServiceInterface;
 use App\Services\RedisCacheService;
 use App\Services\TaskService;
+use App\TaskRepositoryInterface;
+use App\Repositories\EloquentTaskRepository;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -30,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
     $this->app->bind(PaymentGatewayInterface::class, RazorpayService::class);
     $this->app->bind(SmsServiceInterface::class, TwilioSmsService::class);
     $this->app->bind(CacheServiceInterface::class, RedisCacheService::class);
+    $this->app->bind(TaskRepositoryInterface::class, EloquentTaskRepository::class);
     $this->app->bind(TaskService::class, function ($app){
             return new TaskService();
       });

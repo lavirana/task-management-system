@@ -10,16 +10,26 @@ use App\Models\Tag;
 use App\Notifications\TaskAssignedNotification;
 use Illuminate\Support\Facades\Cache;
 use App\Services\TaskService;
+use Illuminate\Support\Facades\Log;
+use App\TaskRepositoryInterface;
+
 
 class TaskController extends Controller
 {
     protected $taskService;
-    public function __construct(TaskService $taskService)
+    protected $taskRepository;
+
+    public function __construct(TaskService $taskService, TaskRepositoryInterface $taskRepository)
     {
         $this->taskService = $taskService;
+        $this->taskRepository = $taskRepository;
         //$this->middleware('auth');
     }
 
+
+    public function allTasks(){
+        return $this->taskRepository->getAllTasks();
+    }
 
     public function viewtaskById($id){
         return $this->taskService->getTaskById($id);
