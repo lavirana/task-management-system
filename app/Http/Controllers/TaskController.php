@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Services\TaskService;
 use Illuminate\Support\Facades\Log;
 use App\TaskRepositoryInterface;
+use App\Contexts\SessionContext;
 
 
 class TaskController extends Controller
@@ -35,10 +36,11 @@ class TaskController extends Controller
         return $this->taskService->getTaskById($id);
     }
 
-    public function index(Request $request){
+    public function index(Request $request, SessionContext $context){
         $userId = auth()->id();
         $status = $request->get('status', '');
         $priority = $request->get('priority', '');
+        $workspaceid = $context->getActiveWorkspaceId();
 
         // unique cache key per user + filters
         $cachekey = "task_list_{$userId}_status_{$status}_priority_{$priority}";
@@ -65,7 +67,7 @@ class TaskController extends Controller
         $projects = Cache::remember('all_projects_list', 120, function () {
             return Project::select('id', 'name')->get();
         });
-        return view('tasks.index',compact('tasks', 'users', 'projects'));
+        return view('tasks.index',compact('tasks', 'users', 'projects', 'workspaceid'));
     }
 
   /*  public function index(Request $request)

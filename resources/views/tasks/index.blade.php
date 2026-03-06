@@ -4,7 +4,7 @@
 <div class="max-w-7xl mx-auto p-6">
 
     <div class="flex justify-between mb-4">
-        <h1 class="text-2xl font-bold">Tasks</h1>
+        <h1 class="text-2xl font-bold">Tasks         <?php print_r($workspaceid); ?></h1>
         <a href="{{ route('tasks.create') }}"
            class="bg-blue-600 text-white px-4 py-2 rounded">
             + Create Task
@@ -58,6 +58,7 @@
             </tr>
         </thead>
         <tbody>
+    
             @foreach($tasks as $task)
         
             <tr class="border-t">

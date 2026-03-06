@@ -14,6 +14,7 @@ use App\Services\RedisCacheService;
 use App\Services\TaskService;
 use App\TaskRepositoryInterface;
 use App\Repositories\EloquentTaskRepository;
+use App\Contexts\SessionContext;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -36,6 +37,9 @@ class AppServiceProvider extends ServiceProvider
     $this->app->bind(TaskService::class, function ($app){
             return new TaskService();
       });
+      $this->app->singleton(SessionContext::class, function ($app) {
+            return new SessionContext();
+        });
     }
 
     /**
