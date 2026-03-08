@@ -20,10 +20,12 @@ class SetWorkspaceContext
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $workspaceId = $request->header('X-Workspace-ID') ?? $request->header('TEST-123');
-        if ($workspaceId) {
-            $this->sessionContext->setActiveWorkspace($workspaceId);
-        }
+        $workspaceId = $request->route('workspace_id') 
+                   ?? $request->header('X-Workspace-ID') 
+                   ?? 'DEFAULT-WS';
+   
+            $this->sessionContext->setActiveWorkspaceId($workspaceId);
+
         return $next($request);
     }
 }

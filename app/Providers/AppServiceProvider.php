@@ -15,6 +15,9 @@ use App\Services\TaskService;
 use App\TaskRepositoryInterface;
 use App\Repositories\EloquentTaskRepository;
 use App\Contexts\SessionContext;
+use App\Services\EmailNotifier;
+use App\Services\DatabaseNotifier;
+use App\Http\Controllers\TaskController;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -40,6 +43,20 @@ class AppServiceProvider extends ServiceProvider
       $this->app->singleton(SessionContext::class, function ($app) {
             return new SessionContext();
         });
+
+        $this->app->when(TaskController::class)
+            ->needs('App\Interfaces\NotifierInterface')
+            ->give(function () {
+                // You can choose which notifier to use based on configuration or other logic
+                return new EmailNotifier(); // or new DatabaseNotifier();
+            });
+
+        $this->app->when(TaskController::class)
+            ->needs('App\Interfaces\NotifierInterface')
+            ->give(function () {
+                // You can choose which notifier to use based on configuration or other logic
+                return new DatabaseNotifier(); // or new EmailNotifier();
+            });    
     }
 
     /**

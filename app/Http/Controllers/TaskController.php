@@ -19,8 +19,9 @@ class TaskController extends Controller
 {
     protected $taskService;
     protected $taskRepository;
+    protected $notifier;
 
-    public function __construct(TaskService $taskService, TaskRepositoryInterface $taskRepository)
+    public function __construct(TaskService $taskService, TaskRepositoryInterface $taskRepository, NotifierInterface $notifier)
     {
         $this->taskService = $taskService;
         $this->taskRepository = $taskRepository;
@@ -41,6 +42,7 @@ class TaskController extends Controller
         $status = $request->get('status', '');
         $priority = $request->get('priority', '');
         $workspaceid = $context->getActiveWorkspaceId();
+        //dd($workspaceid);
 
         // unique cache key per user + filters
         $cachekey = "task_list_{$userId}_status_{$status}_priority_{$priority}";
@@ -147,6 +149,10 @@ class TaskController extends Controller
             null,
             $validate
         );
+
+        // --- CONTEXTUAL BINDING NOTIFICATION START ---
+        $this->notifier->send("New Task: " . $task->title . " has been assigned to you.");
+        // --- CONTEXTUAL BINDING NOTIFICATION END ---
 
         $assignedUser = User::find($request->assigned_to_user_id);
         $assignedUser->notify(new TaskAssignedNotification($task));
