@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Services;
-use App\Interfaces\NotifierInterface;
+use App\NotifierInterface;
 
 class DatabaseNotifier implements NotifierInterface {
-    public function send(string $message) {
+    public function send($message) {
         // Simulate saving the notification to the database
         return "Database notification saved: " . $message;
     }

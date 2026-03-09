@@ -44,19 +44,21 @@ class AppServiceProvider extends ServiceProvider
             return new SessionContext();
         });
 
+        
         $this->app->when(TaskController::class)
-            ->needs('App\Interfaces\NotifierInterface')
+            ->needs('App\NotifierInterface')
             ->give(function () {
                 // You can choose which notifier to use based on configuration or other logic
                 return new EmailNotifier(); // or new DatabaseNotifier();
             });
 
         $this->app->when(TaskController::class)
-            ->needs('App\Interfaces\NotifierInterface')
+            ->needs('App\NotifierInterface')
             ->give(function () {
                 // You can choose which notifier to use based on configuration or other logic
                 return new DatabaseNotifier(); // or new EmailNotifier();
-            });    
+            }); 
+
     }
 
     /**

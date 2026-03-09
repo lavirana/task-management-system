@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Services;
-use App\Interfaces\NotifierInterface;
+use App\NotifierInterface;
 
 class EmailNotifier implements NotifierInterface {
     public function send(string $message) {

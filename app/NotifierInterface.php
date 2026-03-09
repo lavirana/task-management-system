@@ -3,5 +3,5 @@
 namespace App;
 
 interface NotifierInterface {
-    public function sendNotification($message);
+    public function send($message);
 }

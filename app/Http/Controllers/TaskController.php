@@ -13,6 +13,7 @@ use App\Services\TaskService;
 use Illuminate\Support\Facades\Log;
 use App\TaskRepositoryInterface;
 use App\Contexts\SessionContext;
+use App\NotifierInterface;
 
 
 class TaskController extends Controller
