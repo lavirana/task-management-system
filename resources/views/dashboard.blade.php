@@ -63,7 +63,6 @@
             </tr>
         </thead>
         <tbody>
-
         @foreach($tasks as $task)
             <tr>
                 <td>{{ ucfirst($task->title) }}</td>
@@ -86,6 +85,29 @@
     </table>
 </div>
     </div>
+    <br>
+<br>
+
+
+<div class="grid grid-cols-1">
+<div class="flex gap-4 p-12 bg-slate-900">
+    @foreach($groupedTasks as $status => $tasks)
+        <div class="flex-1 min-w-[300px] bg-slate-800 rounded-lg p-4 border-t-4 border-emerald-400">
+            <h3 class="text-white font-bold uppercase mb-4">{{ $status }}</h3>
+
+            <div class="space-y-3">
+                {{-- Ab us status ke andar ke tasks ka loop chalayein --}}
+                @foreach($tasks as $task)
+                    <div class="bg-slate-700 p-3 rounded">
+                        <p class="text-slate-200">{{ $task->title }}</p>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endforeach
+</div>
+    </div>
+
 </div>
 @endsection
 

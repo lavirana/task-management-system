@@ -8,6 +8,7 @@ use App\Http\Controllers\CommentController;
 use App\NotifierInterface;
 use App\Services\EmailNotifier;
 use App\Services\DatabaseNotifier;
+use Illuminate\Support\Collection;
 
 class TaskServiceProvider extends ServiceProvider
 {
@@ -31,6 +32,8 @@ class TaskServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Collection::macro('groupByStatus', function () {
+            return $this->groupBy('status');
+        });
     }
 }
