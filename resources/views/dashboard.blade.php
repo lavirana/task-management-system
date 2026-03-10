@@ -40,6 +40,11 @@
         {{ $stats['total_users'] }}
     </p>
 </div>
+<div class="bg-gray-100 p-5 rounded shadow kanban-header">
+    <h2 class="text-blue-600">Project Board</h2>
+    <p class="text-3xl font-bold">Total Tasks: {{ $boardData['total_tasks'] }}</p>
+    <p class="text-3xl font-bold">Last Sync: {{ $boardData['last_updated'] }}</p>
+</div>
     </div>
     <br>
     <hr>
