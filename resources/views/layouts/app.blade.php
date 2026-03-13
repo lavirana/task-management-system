@@ -387,6 +387,14 @@ function kanbanBoard() {
             })
             .then(res => res.json())
             .then(data => {
+                  //alert('Assigned date updated successfully');
+            Toastify({
+        text: "Task with Id " + this.draggedTaskId + " status has been updated to " + newStatus.replace('_', ' ')+ " successfully",
+                    className: "info",
+                    style: {
+                        background: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }
+                }).showToast();
                 location.reload(); // simple refresh
             });
         }
